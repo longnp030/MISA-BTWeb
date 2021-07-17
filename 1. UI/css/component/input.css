@@ -1,0 +1,91 @@
+input {
+    height: 40px;
+    width: 219px;
+    padding: 0 16px;
+
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    box-sizing: border-box;
+    outline: none;
+
+    font-family: GoogleSans-Medium;
+    font-size: 13px;
+}
+
+input:focus {
+    border-color: #019160;
+}
+
+input::placeholder {
+    color: #bbbbbb;
+    font-size: 11px;
+    font-family: GoogleSans-Regular;
+}
+
+/* icon with input */
+.icon-input {
+    background-image: url('/lib/icon/search.png');
+    background-repeat: no-repeat;
+    background-position: 16px center;
+    padding-left: 40px;
+}
+
+/* checkbox */
+.checkbox {
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.checkbox input { /* reset default checkbox */
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark { /* make a layer as new checkbox */
+    position: absolute;
+    margin-top: -10px;
+    height: 19px;
+    width: 19px;
+    background-color: #ffffff;
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+}
+
+.checkbox:hover input ~ .checkmark { 
+    background-color: #ffffff;
+}
+
+.checkbox input:checked ~ .checkmark {
+    background-color: #019160;
+    border-color: #019160;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox .checkmark:after { /* the white-check icon */
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+

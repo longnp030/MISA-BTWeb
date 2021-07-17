@@ -1,0 +1,9 @@
+#content {
+    position: absolute;
+    top: 49px;
+    left: 227px;
+    width: calc(100% - 259px);
+    padding: 16px 16px 0 16px;
+    height: calc(100vh - 65px);
+    /* background-color: #e9ebee; */
+}

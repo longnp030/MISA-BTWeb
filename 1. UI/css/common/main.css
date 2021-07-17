@@ -1,0 +1,72 @@
+@import url('/css/component/button.css');
+@import url('/css/component/combobox.css');
+@import url('/css/component/input.css');
+@import url('/css/component/modal.css');
+@import url('/css/component/dropdown.css');
+@import url('/css/component/table.css');
+
+body {
+    font-family: GoogleSans;
+    font-size: 13px;
+    margin: 0px;
+}
+
+@font-face {
+    font-family: GoogleSans-Black;
+    src: url('/lib/font/GoogleSans-Black.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-BlackItalic;
+    src: url('/lib/font/GoogleSans-BlackItalic.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-Bold;
+    src: url('/lib/font/GoogleSans-Bold.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-BoldItalic;
+    src: url('/lib/font/GoogleSans-BoldItalic.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-Italic;
+    src: url('/lib/font/GoogleSans-Italic.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-Light;
+    src: url('/lib/font/GoogleSans-Light.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-LightItalic;
+    src: url('/lib/font/GoogleSans-LightItalic.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-Medium;
+    src: url('/lib/font/GoogleSans-Medium.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-MediumItalic;
+    src: url('/lib/font/GoogleSans-MediumItalic.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-Regular;
+    src: url('/lib/font/GoogleSans-Regular.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-Thin;
+    src: url('/lib/font/GoogleSans-Thin.otf');
+}
+
+@font-face {
+    font-family: GoogleSans-ThinItalic;
+    src: url('/lib/font/GoogleSans-ThinItalic.otf');
+}

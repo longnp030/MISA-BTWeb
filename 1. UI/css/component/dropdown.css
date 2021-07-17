@@ -1,0 +1,79 @@
+.dropdown {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    padding: 0 12px 0 16px;
+    height: 38px; /* plus two 1px borders = 40 */
+    width: fit-content;
+
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    color: #000000;
+    background-color: #ffffff;
+    font-family: GoogleSans-Regular;
+}
+
+.dropdown:active, .dropdown:hover  {
+    border-color: #019160;
+}
+
+/* dropdown hint (+?icon) */
+.dropdown .dropdown-icon {
+    background-color: #019160;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+.dropdown .hint {
+    width: 171px;
+}
+
+.dropdown .caret {
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+/* frame contains items */
+.dropdown .dropdown-data {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: -1px;
+    width: 100%;
+    padding: 4px 0;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    /* box-shadow: 0 1px; */
+}
+
+/* dropdown items */
+
+.dropdown .dropdown-data .dropdown-item {
+    height: 40px;
+    width: calc(100% - 16px); /* minus padding left = 16 */
+    line-height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding-left: 16px;
+}
+
+.dropdown .dropdown-data .dropdown-item:hover {
+    background-color: #e9ebee;
+}
+
+.dropdown .dropdown-data .dropdown-item:active {
+    background-color: #019160;
+    color: #ffffff;
+}
+
+.dropdown .dropdown-data .dropdown-item .dropdown-item-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background-color: #019160;
+    margin: 0 10px;
+}

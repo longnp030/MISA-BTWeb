@@ -1,0 +1,152 @@
+/* ********GENERAL MODAL******** */
+.modal-wrapper {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #454545CC;
+    overflow-y: scroll; /* show full modal, scroll all page */
+}
+
+.modal-wrapper .modal {
+    background-color: #f4f4f4;
+    width: calc(100% - 48px); /* minus two padding 24 */
+    /* height: calc(100vh - 96px); */
+    height: fit-content; /* fit background to full form */
+    margin: 24px 24px 24px 24px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 24px auto;
+}
+
+.modal-wrapper .modal .head {
+    display: flex;
+    padding: 24px;
+}
+
+.modal-wrapper .modal .head .title {
+    font-family: GoogleSans-Bold;
+    font-size: 15px;
+    color: #000000;
+}
+
+.modal-wrapper .modal .head .close {
+    background-image: url("/lib/icon/x.svg");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    padding: 6px 6px 0 0;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    cursor: pointer;
+}
+
+.modal-wrapper .modal .head .close:hover {
+    background-color: #e9ebee;
+}
+
+/* modal body */
+.modal-wrapper .modal .body {
+    display: flex;
+    padding:  0 24px 24px 24px;
+}
+
+.modal-wrapper .modal .body .icon {
+    background-color: aqua;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+}
+
+.modal-wrapper .modal .body .text {
+    margin-left: 10px;
+}
+
+
+.modal-wrapper .modal .body {
+    font-family: GoogleSans-Regular;
+    font-size: 13px;
+    color: #000000;
+}
+
+
+/* modal foot */
+.modal-wrapper .modal .foot {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    background-color: #e9ebee;
+    padding: 10px 0;
+}
+
+.modal-wrapper .modal .foot .btn {
+    margin-right: 24px; 
+}
+
+.modal-wrapper .modal .foot .btn-2 {
+    background-color: transparent;
+    border: 0;
+    padding: 0 24px;
+    margin-right: 16px;
+}
+
+.modal-wrapper .modal .foot .btn-2:hover {
+    background-color: #e5e5e5;
+}
+
+
+
+/* ********EMPLOYEE FORM******** */
+/* modal body */
+
+.modal-wrapper .modal .body .left {
+    width: 30%;
+    height: inherit; /* modal body height */
+    margin-right: 24px;
+    align-content: center;
+}
+
+.modal-wrapper .modal .body .left .avatar {
+    background-image: url('/lib/img/default-avatar.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    width: 250px;
+    height: 250px;
+    border-radius: 250px;
+
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto; /* align center */
+}
+
+.form-a hr, .form-b hr {
+    width: 150px;
+    height: 4px;
+    border: 0;
+    background-color: #01b075;
+    margin-top: 0;
+    margin-left: 0;
+}
+
+.modal-wrapper .modal .body .right {
+    height: inherit; /* modal body height */
+    width: 70%;
+}
+
+.modal-wrapper .modal .body .right .form-a-fields {
+    margin-bottom: 24px;
+}
+
+.modal-wrapper .modal .body .right .form-a-fields, .modal-wrapper .modal .body .right .form-b-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}

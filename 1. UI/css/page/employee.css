@@ -1,0 +1,117 @@
+/* HEADER */
+.page-header {
+    display: flex;
+    align-items: center;
+}
+
+.page-header .title {
+    font-family: GoogleSans-Bold;
+    font-size: 20px;
+    color: #000000;
+    float: left;
+}
+
+.page-header .add-employee {
+    float: right;
+    position: absolute;
+    right: 16px;
+}
+
+/* FILTER */
+.filter {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    border-spacing: 16px;
+    gap: 24px;
+}
+
+.filter .left {
+    display: flex;
+}
+
+.filter .left .search, .filter .left .place {
+    margin-right: 16px;
+}
+
+.filter .right {
+    position: absolute;
+    align-items: center;
+    margin-top: 4px;
+    right: 16px;
+}
+
+.filter .right .reload {
+    background-image: url('/lib/icon/refresh.png');
+    background-position: center;
+}
+
+/* TABLE */
+.table {
+    height: calc(100vh - 210px);
+    margin-top: 8px;
+    overflow-y: scroll;
+}
+
+/* screen height = 695
+   695 - 49 top- 16 content padding = 630 -> main content
+   630 - 25 title - (16+40) filter = 549 -> table + paging
+   549 - 56 paging = 493 -> table = 8 margin top + 485 main content 
+   49 + 16 + 25 + 16 + 40 + 8 + 56 = 210 
+   
+   table -> paging = 5 */
+
+/* PAGING */
+.paging {
+    width: 100%;
+    height: 56px;
+    line-height: 56px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.paging .center {
+    display: flex;
+    justify-content: space-around;
+}
+
+.paging .center button {
+    margin: 0 4px;
+}
+
+.paging .center .first-page {
+    background-image: url('/lib/icon/btn-firstpage.svg');
+    margin-right: 12px;
+    border-color: #ffffff;
+}
+.paging .center .prev-page {
+    background-image: url('/lib/icon/btn-prev-page.svg');
+    border-color: #ffffff;
+}
+.paging .center .next-page {
+    background-image: url('/lib/icon/btn-next-page.svg');
+    border-color: #ffffff;
+}
+.paging .center .last-page {
+    background-image: url('/lib/icon/btn-lastpage.svg');
+    margin-left: 12px;
+    border-color: #ffffff;
+}
+.paging .center .first-page:hover, .paging .center .prev-page:hover, .paging .center .next-page:hover, .paging .center .last-page:hover {
+    background-color: #f4f4f4;
+}
+
+.paging .center .i-page {
+    padding: 0 15px;
+    width: 40px;
+    border-radius: 50px;
+}
+.paging .center .i-page:hover, .active {
+    border-color: #019160;
+    background-color: #019160;
+    color: #ffffff;
+}
+
+

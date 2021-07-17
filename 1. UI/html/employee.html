@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="/css/page/employee.css">
+    </head>
+    <body>
+        <div class="page-header">
+            <div class="title">Danh sách nhân viên</div>
+            <div class="add-employee">
+                <button class="btn" id="add-employee-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">Thêm nhân viên</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter">
+            <div class="left">
+                <input type="text" class="search icon-input" placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại">
+
+                <div class="dropdown place" id="place">
+                    <div class="hint">Tat ca phong ban</div>
+                    <div class="caret" id="caret-place"><i class="fas fa-angle-down"></i></div>
+                    <div class="dropdown-data" id="data-place">
+                        <div class="dropdown-item">
+                            <div class="dropdown-item-text">Phong dao tao</div>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-item-text">Phong nhan su</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dropdown position" id="position">
+                    <div class="hint">Tat ca vi tri</div>
+                    <div class="caret" id="caret-position"><i class="fas fa-angle-down"></i></div>
+                    <div class="dropdown-data" id="data-position">
+                        <div class="dropdown-item">
+                            <div class="dropdown-item-text">Giam doc</div>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-item-text">Nhan vien</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <button class="btn-2 reload"></button>
+            </div>
+        </div>
+
+        <div class="table">
+            <table cellspacing="0">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Mã nhân viên <i class="fas fa-sort"></i></th>
+                        <th>Họ và tên</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        <th>Điện thoại</th>
+                        <th>Email</th>
+                        <th>Chức vụ</th>
+                        <th>Phòng ban</th>
+                        <th>Mức lương cơ bản</th>
+                        <th>Tình trạng công việc</th>
+                    </tr>
+                </thead>
+            
+                <tbody>
+                    <tr>
+                        <td><label class="checkbox">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                        </label></td>
+                        <td>NV-000001</td>
+                        <td>Nguyễn Văn A</td>
+                        <td>Nam</td>
+                        <td>21/09/2000</td>
+                        <td>0759632118</td>
+                        <td>aaaaaaaaaa@gmail.com</td>
+                        <td>Fresher</td>
+                        <td>Phòng đào tạo</td>
+                        <td>0</td>
+                        <td>Đang làm việc</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="paging">
+            <div class="left">
+                Hiển thị
+                <span>1</span>
+                -
+                <span>9</span>
+                /
+                <span>1000</span>
+                nhân viên
+            </div>
+            <div class="center">
+                <button class="first-page btn-2"></button>
+                <button class="prev-page btn-2"></button>
+                <button class="i-page btn-2 active">1</button>
+                <button class="i-page btn-2">2</button>
+                <button class="i-page btn-2">3</button>
+                <button class="i-page btn-2">4</button>
+                <button class="next-page btn-2"></button>
+                <button class="last-page btn-2"></button>
+            </div>
+            <div class="right">
+                <span>9</span>
+                nhân viên/trang
+            </div>
+        </div>
+
+        <div class="modal-wrapper" id="employee-form">
+            <div class="modal">
+                <div class="head">
+                    <div class="title">THÔNG TIN NHÂN VIÊN</div>
+                    <div class="close" id="close-modal"></div>
+                </div>
+        
+                <div class="body">
+                    <div class="left">
+                        <div class="avatar"></div>
+                        <div class="avt-rules">(Vui lòng chọn ảnh có định dạng .jpg, .jpeg, .png, .gif.)</div>
+                    </div>
+                    <div class="right">
+                        <div class="form-a">
+                            <div class="form-a-title">A. THÔNG TIN CHUNG</div><hr>
+                            <div class="form-a-fields">
+                                <div>
+                                    <label for="employee-id">Mã nhân viên</label><br>
+                                    <input type="text" class="employee-id" id="employee-id">
+                                </div>
+        
+                                <div>
+                                    <label for="employee-name">Họ và tên</label><br>
+                                    <input type="text" class="employee-name" id="employee-name">
+                                </div>
+                                
+                                <div>
+                                    <label for="employee-dob">Ngày sinh</label><br>
+                                    <input type="date" class="employee-dob" id="employee-dob">
+                                </div>
+        
+                                <div>
+                                    <label for="employee-gender">Ngày sinh</label><br>
+                                    <div class="dropdown" id="employee-gender">
+                                        <div class="hint">Giới tính</div>
+                                        <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
+                                        <div class="dropdown-data" id="data-gender">
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-text">Nam</div>
+                                            </div>
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-text">Nữ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div>
+                                    <label for="employee-ccid">Số CMTND/Căn cước</label><br>
+                                    <input type="number" class="employee-ccid" id="employee-ccid">
+                                </div>
+        
+                                <div>
+                                    <label for="ccid-date">Ngày cấp</label><br>
+                                    <input type="date" class="ccid-date" id="ccid-date">
+                                </div>
+        
+                                <div>
+                                    <label for="ccid-issue-place">Nơi cấp</label><br>
+                                    <input type="text" class="ccid-issue-place" id="ccid-issue-place">
+                                </div>
+                                <div></div>
+                                    
+                                <div>
+                                    <label for="employee-email">Email</label><br>
+                                    <input type="email" class="employee-email" id="employee-email">
+                                </div>
+        
+                                <div>
+                                    <label for="employee-phonenum">Số điện thoại</label><br>
+                                    <input type="number" class="employee-phonenum" id="employee-phonenum">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-b">
+                            <div class="form-b-title">B. THÔNG TIN CÔNG VIỆC</div><hr>
+                            <div class="form-b-fields">
+                                <div>
+                                    <label for="employee-position" class="col1">Vị trí</label><br>
+                                    <div class="dropdown" id="employee-gender">
+                                        <div class="hint">Giới tính</div>
+                                        <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
+                                        <div class="dropdown-data" id="data-gender">
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-text">Nam</div>
+                                            </div>
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-text">Nữ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div>
+                                    <label for="employee-place" class="col2">Phòng ban</label><br>
+                                    <div class="dropdown" id="employee-gender">
+                                        <div class="hint">Giới tính</div>
+                                        <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
+                                        <div class="dropdown-data" id="data-gender">
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-text">Nam</div>
+                                            </div>
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-text">Nữ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div>
+                                    <label for="employee-taxnum" class="col1">Mã số thuế cá nhân</label><br>
+                                    <input type="number" class="employee-taxnum col1" id="employee-taxnum">
+                                </div>
+                                
+                                <div>
+                                    <label for="employee-salary" class="col2">Mức lương cơ bản</label><br>
+                                    <input type="number" class="employee-salary col2" id="employee-salary">
+                                </div>
+                            
+                                <div>
+                                    <label for="employee-joindate" class="col1">Ngày gia nhập công ty</label><br>
+                                    <input type="date" class="employee-joindate col1" id="employee-joindate">
+                                </div>
+                                
+                                <div>
+                                    <label for="employee-status" class="col2">Tình trạng công việc</label><br>
+                                    <div class="dropdown" id="employee-gender">
+                                        <div class="hint">Giới tính</div>
+                                        <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
+                                        <div class="dropdown-data" id="data-gender">
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-text">Nam</div>
+                                            </div>
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-text">Nữ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="foot">
+                    <button class="btn btn-danger">Nop ho so</button>
+                    <button class="btn-2" id="cancel-modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!------------------------------------------------>
+        <script src="/js/page/employee.js"></script>
+        <script src="/js/component/combobox.js"></script>
+    </body>
+</html>
