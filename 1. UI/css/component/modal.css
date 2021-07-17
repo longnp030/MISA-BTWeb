@@ -34,7 +34,7 @@
 }
 
 .modal-wrapper .modal .head .close {
-    background-image: url("/lib/icon/x.svg");
+    background-image: url("../../lib/icon/x.svg");
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -113,7 +113,7 @@
 }
 
 .modal-wrapper .modal .body .left .avatar {
-    background-image: url('/lib/img/default-avatar.jpg');
+    background-image: url('../../lib/img/default-avatar.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;

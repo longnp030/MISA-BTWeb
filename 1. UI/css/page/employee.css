@@ -42,7 +42,7 @@
 }
 
 .filter .right .reload {
-    background-image: url('/lib/icon/refresh.png');
+    background-image: url('../../lib/icon/refresh.png');
     background-position: center;
 }
 
@@ -82,20 +82,20 @@
 }
 
 .paging .center .first-page {
-    background-image: url('/lib/icon/btn-firstpage.svg');
+    background-image: url('../../lib/icon/btn-firstpage.svg');
     margin-right: 12px;
     border-color: #ffffff;
 }
 .paging .center .prev-page {
-    background-image: url('/lib/icon/btn-prev-page.svg');
+    background-image: url('../../lib/icon/btn-prev-page.svg');
     border-color: #ffffff;
 }
 .paging .center .next-page {
-    background-image: url('/lib/icon/btn-next-page.svg');
+    background-image: url('../../lib/icon/btn-next-page.svg');
     border-color: #ffffff;
 }
 .paging .center .last-page {
-    background-image: url('/lib/icon/btn-lastpage.svg');
+    background-image: url('../../lib/icon/btn-lastpage.svg');
     margin-left: 12px;
     border-color: #ffffff;
 }

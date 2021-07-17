@@ -24,7 +24,7 @@ input::placeholder {
 
 /* icon with input */
 .icon-input {
-    background-image: url('/lib/icon/search.png');
+    background-image: url('../../lib/icon/search.png');
     background-repeat: no-repeat;
     background-position: 16px center;
     padding-left: 40px;

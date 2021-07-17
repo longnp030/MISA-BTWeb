@@ -18,7 +18,7 @@
 }
 
 .header .left .toggle {
-    background-image: url('/lib/img/toggle.png');
+    background-image: url('../../lib/img/toggle.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -29,7 +29,7 @@
 }
 
 .header .left .logo {
-    background-image: url('/lib/img/cukcuk-logo.png');
+    background-image: url('../../lib/img/cukcuk-logo.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 0 center;
@@ -78,7 +78,7 @@
 }
 
 .header .right .user .avatar {
-    background-image: url('/lib/img/default-avatar.jpg');
+    background-image: url('../../lib/img/default-avatar.jpg');
     background-size: contain;
     background-repeat: no-repeat;
 
@@ -95,7 +95,7 @@
 }
 
 .header .right .user .option {
-    background-image: url('/lib/icon/option.png');
+    background-image: url('../../lib/icon/option.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

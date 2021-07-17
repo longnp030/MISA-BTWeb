@@ -37,17 +37,17 @@
 }
 
 .menu .menu-item .menu-icon-dashboard {
-    background-image: url("/lib/icon/dashboard.png");
+    background-image: url("../../lib/icon/dashboard.png");
 }
 
 .menu .menu-item .menu-icon-report {
-    background-image: url("/lib/icon/report.png");
+    background-image: url("../../lib/icon/report.png");
 }
 
 .menu .menu-item .menu-icon-employee {
-    background-image: url("/lib/icon/dic-employee.png");
+    background-image: url("../../lib/icon/dic-employee.png");
 }
 
 .menu .menu-item .menu-icon-setting {
-    background-image: url("/lib/icon/setting.png");
+    background-image: url("../../lib/icon/setting.png");
 }
