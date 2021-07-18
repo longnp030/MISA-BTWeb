@@ -34,13 +34,15 @@
 /* buttons contain icon */
 .btn .btn-icon {
     background-color: #ffffff;
-    margin-left: 16px; /* left -> icon = 16 */
+    margin-left: 0px; /* left -> icon = 16 */
+    margin-right: 8px; /* icon -> text = 8 */
     width: 16px;
     height: 16px;
 }
 
 .btn .btn-text {
-    margin: 0 16px 0 8px; /* icon -> text = 8; text -> right = 16 */
+    margin: 0 0 0 8px; /* icon -> text = 8; text -> right = 16 */
+    /* changed right from 16 to 0 */
 }
 
 /* buttons contain dropdown */
@@ -87,13 +89,6 @@
     border: 0;
     padding: 0 24px;
     background-color: #e9ebee;
-}
-
-.btn-2:active {
-    border: 0;
-    padding: 0 24px;
-    background-color: #01b075;
-    color: #ffffff
 }
 
 /* button danger - red */

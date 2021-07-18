@@ -28,11 +28,22 @@
     z-index: 0;
 }
 
+.combobox .btn-clear {
+    right: 40px; /* caret width = 40 */
+    color: #bbbbbb;
+    border-left: 0;
+}
+
 .combobox .btn-2:hover {
     padding: 0 12px;
-    border: 0;
     border-left: 1px solid #bbbbbb;
     background-color: transparent;
+}
+
+.combobox .btn-clear:hover {
+    right: 40px;
+    color: #bbbbbb;
+    border-left: 0;
 }
 
 .combobox .btn-2:active {

@@ -22,12 +22,17 @@
     display: flex;
     align-items: center;
     margin-top: 16px;
-    border-spacing: 16px;
+    /* border-spacing: 16px; */
     gap: 24px;
+    width: fit-content;
 }
 
 .filter .left {
     display: flex;
+}
+
+.filter .left .search {
+    width: 272px;
 }
 
 .filter .left .search, .filter .left .place {
@@ -72,6 +77,10 @@
     align-items: center;
 }
 
+.paging .left, .paging .right {
+    height: 56px;
+}
+
 .paging .center {
     display: flex;
     justify-content: space-around;
@@ -79,6 +88,7 @@
 
 .paging .center button {
     margin: 0 4px;
+    background-color: #ffffff;
 }
 
 .paging .center .first-page {
@@ -108,7 +118,7 @@
     width: 40px;
     border-radius: 50px;
 }
-.paging .center .i-page:hover, .active {
+.paging .center .active {
     border-color: #019160;
     background-color: #019160;
     color: #ffffff;

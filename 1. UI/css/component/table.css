@@ -1,5 +1,6 @@
 table {
     width: 100%;
+    table-layout: fixed; /* width inherit parent div */
     text-align: left;
     font-family: GoogleSans-Regular;
 }
@@ -15,13 +16,17 @@ table tr {
 table th, td {
     border-bottom: 1px solid #bbbbbb;
     padding: 0 10px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 table tbody tr:hover {
     background-color: #e5e5e5;
 }
 
-table thead tr td:first-child, table tbody tr td:first-child {
+table thead tr th:first-child, table tbody tr td:first-child {
+    width: 10px;
     padding: 0 26px 0 16px; /* 26 = 16 page padding-left + 10 */
 }
 

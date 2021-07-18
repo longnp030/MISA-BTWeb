@@ -2,10 +2,10 @@
     display: flex;
     align-items: center;
     position: relative;
+    justify-content: space-between; /* move caret to right side */
 
     padding: 0 12px 0 16px;
     height: 38px; /* plus two 1px borders = 40 */
-    width: fit-content;
 
     border: 1px solid #bbbbbb;
     border-radius: 4px;
@@ -27,7 +27,15 @@
 }
 
 .dropdown .hint {
-    width: 171px;
+    width: 100%;
+}
+
+.dropdown .btn-clear {
+    border: 0;
+    height: 38px;
+    padding: 0 16px;
+    color: #bbbbbb;
+    background-color: #ffffff;
 }
 
 .dropdown .caret {
@@ -43,9 +51,10 @@
     left: -1px;
     width: 100%;
     padding: 4px 0;
-    border: 1px solid #000000;
+    z-index: 1;
+    border: 1px solid #bbbbbb;
     border-radius: 4px;
-    /* box-shadow: 0 1px; */
+    box-shadow: 1px 1px 4px #bbbbbb; /* fade 1px right+bottom, fade to 4px and fade color #bbbbbb */
 }
 
 /* dropdown items */

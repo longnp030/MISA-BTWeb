@@ -55,7 +55,7 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>Mã nhân viên <i class="fas fa-sort"></i></th>
+                        <th>Mã nhân viên<i class="fas fa-sort"></i></th>
                         <th>Họ và tên</th>
                         <th>Giới tính</th>
                         <th>Ngày sinh</th>
@@ -68,24 +68,7 @@
                     </tr>
                 </thead>
             
-                <tbody>
-                    <tr>
-                        <td><label class="checkbox">
-                            <input type="checkbox">
-                            <span class="checkmark"></span>
-                        </label></td>
-                        <td>NV-000001</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>Nam</td>
-                        <td>21/09/2000</td>
-                        <td>0759632118</td>
-                        <td>aaaaaaaaaa@gmail.com</td>
-                        <td>Fresher</td>
-                        <td>Phòng đào tạo</td>
-                        <td>0</td>
-                        <td>Đang làm việc</td>
-                    </tr>
-                </tbody>
+                <tbody><!-- fetch API --></tbody>
             </table>
         </div>
 
@@ -102,10 +85,10 @@
             <div class="center">
                 <button class="first-page btn-2"></button>
                 <button class="prev-page btn-2"></button>
-                <button class="i-page btn-2 active">1</button>
-                <button class="i-page btn-2">2</button>
-                <button class="i-page btn-2">3</button>
-                <button class="i-page btn-2">4</button>
+                <button class="btn-2 i-page active">1</button>
+                <button class="btn-2 i-page">2</button>
+                <button class="btn-2 i-page">3</button>
+                <button class="btn-2 i-page">4</button>
                 <button class="next-page btn-2"></button>
                 <button class="last-page btn-2"></button>
             </div>
@@ -132,13 +115,13 @@
                             <div class="form-a-title">A. THÔNG TIN CHUNG</div><hr>
                             <div class="form-a-fields">
                                 <div>
-                                    <label for="employee-id">Mã nhân viên</label><br>
-                                    <input type="text" class="employee-id" id="employee-id">
+                                    <label for="employee-id">Mã nhân viên<span class="required"> (<span class="asterisk"></span>)</span></label><br>
+                                    <input tabindex="0" type="text" class="employee-id" id="employee-id">
                                 </div>
         
                                 <div>
-                                    <label for="employee-name">Họ và tên</label><br>
-                                    <input type="text" class="employee-name" id="employee-name">
+                                    <label for="employee-name">Họ và tên<span class="required"> (<span class="asterisk"></span>)</span></label><br>
+                                    <input tabindex="1" type="text" class="employee-name" id="employee-name">
                                 </div>
                                 
                                 <div>
@@ -147,7 +130,7 @@
                                 </div>
         
                                 <div>
-                                    <label for="employee-gender">Ngày sinh</label><br>
+                                    <label for="employee-gender">Giới tính</label><br>
                                     <div class="dropdown" id="employee-gender">
                                         <div class="hint">Giới tính</div>
                                         <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
@@ -163,7 +146,7 @@
                                 </div>
         
                                 <div>
-                                    <label for="employee-ccid">Số CMTND/Căn cước</label><br>
+                                    <label for="employee-ccid">Số CMTND/Căn cước<span class="required"> (<span class="asterisk"></span>)</span></label><br>
                                     <input type="number" class="employee-ccid" id="employee-ccid">
                                 </div>
         
@@ -179,12 +162,12 @@
                                 <div></div>
                                     
                                 <div>
-                                    <label for="employee-email">Email</label><br>
+                                    <label for="employee-email">Email<span class="required"> (<span class="asterisk"></span>)</span></label><br>
                                     <input type="email" class="employee-email" id="employee-email">
                                 </div>
         
                                 <div>
-                                    <label for="employee-phonenum">Số điện thoại</label><br>
+                                    <label for="employee-phonenum">Số điện thoại<span class="required"> (<span class="asterisk"></span>)</span></label><br>
                                     <input type="number" class="employee-phonenum" id="employee-phonenum">
                                 </div>
                             </div>
@@ -194,9 +177,9 @@
                             <div class="form-b-title">B. THÔNG TIN CÔNG VIỆC</div><hr>
                             <div class="form-b-fields">
                                 <div>
-                                    <label for="employee-position" class="col1">Vị trí</label><br>
+                                    <label for="employee-position">Vị trí</label><br>
                                     <div class="dropdown" id="employee-gender">
-                                        <div class="hint">Giới tính</div>
+                                        <div class="hint">Vị trí</div>
                                         <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
                                         <div class="dropdown-data" id="data-gender">
                                             <div class="dropdown-item">
@@ -210,40 +193,41 @@
                                 </div>
         
                                 <div>
-                                    <label for="employee-place" class="col2">Phòng ban</label><br>
+                                    <label for="employee-place">Phòng ban</label><br>
                                     <div class="dropdown" id="employee-gender">
-                                        <div class="hint">Giới tính</div>
+                                        <div class="hint">Phòng ban</div>
                                         <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
                                         <div class="dropdown-data" id="data-gender">
                                             <div class="dropdown-item">
-                                                <div class="dropdown-item-text">Nam</div>
+                                                <div class="dropdown-item-text">Phòng đào tạo</div>
                                             </div>
                                             <div class="dropdown-item">
-                                                <div class="dropdown-item-text">Nữ</div>
+                                                <div class="dropdown-item-text">Phòng nhân sự</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             
                                 <div>
-                                    <label for="employee-taxnum" class="col1">Mã số thuế cá nhân</label><br>
-                                    <input type="number" class="employee-taxnum col1" id="employee-taxnum">
+                                    <label for="employee-taxnum">Mã số thuế cá nhân</label><br>
+                                    <input type="number" class="employee-taxnum" id="employee-taxnum">
                                 </div>
                                 
-                                <div>
-                                    <label for="employee-salary" class="col2">Mức lương cơ bản</label><br>
-                                    <input type="number" class="employee-salary col2" id="employee-salary">
+                                <div class="salary-input">
+                                    <label for="employee-salary">Mức lương cơ bản</label><br>
+                                    <input class="employee-salary" id="employee-salary">
+                                    <div class="currency">(VNĐ)</div>
                                 </div>
                             
                                 <div>
-                                    <label for="employee-joindate" class="col1">Ngày gia nhập công ty</label><br>
-                                    <input type="date" class="employee-joindate col1" id="employee-joindate">
+                                    <label for="employee-joindate">Ngày gia nhập công ty</label><br>
+                                    <input type="date" class="employee-joindate" id="employee-joindate">
                                 </div>
                                 
                                 <div>
-                                    <label for="employee-status" class="col2">Tình trạng công việc</label><br>
+                                    <label for="employee-status">Tình trạng công việc</label><br>
                                     <div class="dropdown" id="employee-gender">
-                                        <div class="hint">Giới tính</div>
+                                        <div class="hint">Tình trạng công việc</div>
                                         <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
                                         <div class="dropdown-data" id="data-gender">
                                             <div class="dropdown-item">
@@ -261,8 +245,8 @@
                 </div>
         
                 <div class="foot">
-                    <button class="btn btn-danger">Nop ho so</button>
-                    <button class="btn-2" id="cancel-modal">Cancel</button>
+                    <button class="btn"><span class="btn-icon"><i class="far fa-save"></i></span> Lưu</button>
+                    <button class="btn-2" id="cancel-modal">Hủy</button>
                 </div>
             </div>
         </div>

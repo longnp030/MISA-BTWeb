@@ -12,7 +12,7 @@
 }
 
 .modal-wrapper .modal {
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     width: calc(100% - 48px); /* minus two padding 24 */
     /* height: calc(100vh - 96px); */
     height: fit-content; /* fit background to full form */
@@ -127,8 +127,12 @@
     margin-right: auto; /* align center */
 }
 
+.modal-wrapper .modal .body .left .avt-rules {
+    text-align: center;
+}
+
 .form-a hr, .form-b hr {
-    width: 150px;
+    width: 105px;
     height: 4px;
     border: 0;
     background-color: #01b075;
@@ -145,8 +149,49 @@
     margin-bottom: 24px;
 }
 
-.modal-wrapper .modal .body .right .form-a-fields, .modal-wrapper .modal .body .right .form-b-fields {
+.modal-wrapper .modal .body .right .form-a .form-a-fields,
+.modal-wrapper .modal .body .right .form-b .form-b-fields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields input,
+.modal-wrapper .modal .body .right .form-b .form-b-fields input,
+.modal-wrapper .modal .body .right .form-a .form-a-fields .dropdown,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .dropdown {
+    margin-top: 4px;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields .required .asterisk:after,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .required:after {
+    content: "*";
+    color: red;
+}
+
+/* .modal-wrapper .modal .body .right .form-b .form-b-fields .employee-salary::-webkit-input-placeholder {
+    text-align:right;
+    color: #000000;
+    font-family: GoogleSans-Italic;
+} */
+
+.modal-wrapper .modal .body .right .form-b .form-b-fields .salary-input {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.modal-wrapper .modal .body .right .form-b .form-b-fields .salary-input label{
+    width: 100%;
+}
+
+.modal-wrapper .modal .body .right .form-b .form-b-fields .salary-input input{
+    direction: rtl;
+    padding-right: 50px;
+}
+
+.modal-wrapper .modal .body .right .form-b .form-b-fields .currency {
+    position: relative;
+    top: -28px;
+    right: -376px; /* adjust via f12 */
+    font-family: GoogleSans-Italic;
 }
