@@ -22,15 +22,24 @@
                     <div class="logo"></div>
                     <div class="dropdown">
                         <div class="hint">Công ty MISA</div>
-                        <div class="caret" id="dropdown-caret"><i class="fas fa-angle-down"></i></div>
-                        <div class="dropdown-data" id="dropdown-data">
+                        <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>
+                        <div class="caret" id="dropdown-caret" onclick="openSelect(this);"><i class="fas fa-angle-down"></i></div>
+                        <div class="dropdown-data">
                             <div class="dropdown-item">
                                 <div class="dropdown-item-icon"></div>
-                                <div class="dropdown-item-text">Dang cho duyet</div>
+                                <div class="dropdown-item-text">Chi nhánh 1</div>
                             </div>
                             <div class="dropdown-item">
                                 <div class="dropdown-item-icon"></div>
-                                <div class="dropdown-item-text">Dang cho duyet</div>
+                                <div class="dropdown-item-text">Chi nhánh 2</div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="dropdown-item-icon"></div>
+                                <div class="dropdown-item-text">Chi nhánh 3</div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="dropdown-item-icon"></div>
+                                <div class="dropdown-item-text">Chi nhánh 4</div>
                             </div>
                         </div>
                     </div>
@@ -76,8 +85,8 @@
 
 
         <!------------------------------------>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="../lib/font/fontawesome-5.15.1/attribution.js"></script>
+        <script src="../js/common/jquery-3.6.0.min.js"></script>
         <script src="../js/common/main.js"></script>
     </body>
 </html>

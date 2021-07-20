@@ -1,11 +1,11 @@
 // var addEmployeeBtn = document.getElementById("add-employee-btn");
-// var employeeForm = document.getElementById("employee-form");
+// var employeeForm = document.getElementById("employee-form-modal");
 
 // addEmployeeBtn.onclick = function () {
 //     employeeForm.style.display = "block";
 // }
 
-// var employeeFormClose = document.getElementById("employee-form-close");
+// var employeeFormClose = document.getElementById("employee-form-modal-close");
 // employeeFormClose.onclick = function () {
 //     employeeForm.style.display = "none";
 // }

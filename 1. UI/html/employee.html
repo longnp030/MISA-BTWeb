@@ -8,7 +8,7 @@
         <div class="page-header">
             <div class="title">Danh sách nhân viên</div>
             <div class="add-employee">
-                <button class="btn" id="add-employee-btn">
+                <button class="btn" id="add-employee-btn" onclick="openModal(this, 'employee-form-modal');">
                     <span class="btn-icon"></span>
                     <span class="btn-text">Thêm nhân viên</span>
                 </button>
@@ -19,34 +19,27 @@
             <div class="left">
                 <input type="text" class="search icon-input" placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại">
 
-                <div class="dropdown place" id="place">
-                    <div class="hint">Tat ca phong ban</div>
-                    <div class="caret" id="caret-place"><i class="fas fa-angle-down"></i></div>
+                <div class="dropdown place-dropdown" id="place-dropdown">
+                    <div class="hint">Tất cả phòng ban</div>
+                    <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>
+                    <div class="caret" id="caret-place" onclick="openSelect(this);"><i class="fas fa-angle-down"></i></div>
                     <div class="dropdown-data" id="data-place">
-                        <div class="dropdown-item">
-                            <div class="dropdown-item-text">Phong dao tao</div>
-                        </div>
-                        <div class="dropdown-item">
-                            <div class="dropdown-item-text">Phong nhan su</div>
-                        </div>
+                        <!-- <div class="dropdown-item">
+                            <div class="dropdown-item-icon"></div>
+                            <div class="dropdown-item-text">${positionName}</div>
+                        </div> -->
                     </div>
                 </div>
 
-                <div class="dropdown position" id="position">
-                    <div class="hint">Tat ca vi tri</div>
-                    <div class="caret" id="caret-position"><i class="fas fa-angle-down"></i></div>
-                    <div class="dropdown-data" id="data-position">
-                        <div class="dropdown-item">
-                            <div class="dropdown-item-text">Giam doc</div>
-                        </div>
-                        <div class="dropdown-item">
-                            <div class="dropdown-item-text">Nhan vien</div>
-                        </div>
-                    </div>
+                <div class="dropdown position-dropdown" id="position-dropdown">
+                    <div class="hint">Tất cả vị trí</div>
+                    <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>
+                    <div class="caret" id="caret-position" onclick="openSelect(this);"><i class="fas fa-angle-down"></i></div>
+                    <div class="dropdown-data" id="data-position"></div>
                 </div>
             </div>
             <div class="right">
-                <button class="btn-2 reload"></button>
+                <button class="btn-2 reload" id="reload"></button>
             </div>
         </div>
 
@@ -54,21 +47,21 @@
             <table cellspacing="0">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th>Mã nhân viên<i class="fas fa-sort"></i></th>
-                        <th>Họ và tên</th>
-                        <th>Giới tính</th>
-                        <th>Ngày sinh</th>
-                        <th>Điện thoại</th>
-                        <th>Email</th>
-                        <th>Chức vụ</th>
-                        <th>Phòng ban</th>
-                        <th>Mức lương cơ bản</th>
-                        <th>Tình trạng công việc</th>
+                        <th field="CheckMark"></th>
+                        <th field="EmployeeCode" title="Mã nhân viên">Mã nhân viên</th>
+                        <th field="FullName" title="Họ và tên">Họ và tên</th>
+                        <th field="GenderName" title="Giới tính">Giới tính</th>
+                        <th field="DateOfBirth" title="Ngày sinh">Ngày sinh</th>
+                        <th field="PhoneNumber" title="Điện thoại">Điện thoại</th>
+                        <th field="Email" title="Email">Email</th>
+                        <th field="PositionName" title="Chức vụ">Chức vụ</th>
+                        <th field="DepartmentName" title="Phòng ban">Phòng ban</th>
+                        <th field="Salary" title="Mức lương cơ bản">Mức lương cơ bản</th>
+                        <th field="WorkStatus" title="Tình trạng công việc">Tình trạng công việc</th>
                     </tr>
                 </thead>
             
-                <tbody><!-- fetch API --></tbody>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -77,9 +70,9 @@
                 Hiển thị
                 <span>1</span>
                 -
-                <span>9</span>
+                <span class="employee-count"></span>
                 /
-                <span>1000</span>
+                <span class="employee-count"></span>
                 nhân viên
             </div>
             <div class="center">
@@ -93,16 +86,16 @@
                 <button class="last-page btn-2"></button>
             </div>
             <div class="right">
-                <span>9</span>
+                <span class="employee-count"></span>
                 nhân viên/trang
             </div>
         </div>
 
-        <div class="modal-wrapper" id="employee-form">
+        <div class="modal-wrapper" id="employee-form-modal">
             <div class="modal">
                 <div class="head">
                     <div class="title">THÔNG TIN NHÂN VIÊN</div>
-                    <div class="close" id="close-modal"></div>
+                    <div class="close" id="close-modal" onclick="closeModal(this, 'employee-form-modal');"></div>
                 </div>
         
                 <div class="body">
@@ -110,36 +103,43 @@
                         <div class="avatar"></div>
                         <div class="avt-rules">(Vui lòng chọn ảnh có định dạng .jpg, .jpeg, .png, .gif.)</div>
                     </div>
-                    <div class="right">
+                    <div class="right"><form id="employee-form" method="POST">
                         <div class="form-a">
                             <div class="form-a-title">A. THÔNG TIN CHUNG</div><hr>
                             <div class="form-a-fields">
                                 <div>
-                                    <label for="employee-id">Mã nhân viên<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input tabindex="0" type="text" class="employee-id" id="employee-id">
+                                    <label for="employee-code">Mã nhân viên<span class="required"> (<span class="asterisk"></span>)</span></label><br>
+                                    <input tabindex="0" type="text" class="employee-code" id="employee-code" name="employeeCode" required>
                                 </div>
         
                                 <div>
                                     <label for="employee-name">Họ và tên<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input tabindex="1" type="text" class="employee-name" id="employee-name">
+                                    <input tabindex="1" type="text" class="employee-name" id="employee-name" name="fullName" required>
                                 </div>
                                 
                                 <div>
                                     <label for="employee-dob">Ngày sinh</label><br>
-                                    <input type="date" class="employee-dob" id="employee-dob">
+                                    <input type="date" class="employee-dob" id="employee-dob" name="dateOfBirth">
                                 </div>
         
                                 <div>
                                     <label for="employee-gender">Giới tính</label><br>
-                                    <div class="dropdown" id="employee-gender">
+                                    <input class="employee-gender" name="employee-gender" hidden>
+                                    <div class="dropdown" id="employee-gender" onmouseenter="applySelect(this);">
                                         <div class="hint">Giới tính</div>
-                                        <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
+                                        <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>                                        <div class="caret" id="caret-gender" onclick="openSelect(this);"><i class="fas fa-angle-down"></i></div>
                                         <div class="dropdown-data" id="data-gender">
                                             <div class="dropdown-item">
+                                                <div class="dropdown-item-icon"></div>
                                                 <div class="dropdown-item-text">Nam</div>
                                             </div>
                                             <div class="dropdown-item">
+                                                <div class="dropdown-item-icon"></div>
                                                 <div class="dropdown-item-text">Nữ</div>
+                                            </div>
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-icon"></div>
+                                                <div class="dropdown-item-text">Không xác định</div>
                                             </div>
                                         </div>
                                     </div>
@@ -147,28 +147,28 @@
         
                                 <div>
                                     <label for="employee-ccid">Số CMTND/Căn cước<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input type="number" class="employee-ccid" id="employee-ccid">
+                                    <input class="employee-ccid" id="employee-ccid" name="identityNumber" onkeyup="validate(this);" required>
                                 </div>
         
                                 <div>
                                     <label for="ccid-date">Ngày cấp</label><br>
-                                    <input type="date" class="ccid-date" id="ccid-date">
+                                    <input type="date" class="ccid-date" id="ccid-date" name="identityDate">
                                 </div>
         
                                 <div>
                                     <label for="ccid-issue-place">Nơi cấp</label><br>
-                                    <input type="text" class="ccid-issue-place" id="ccid-issue-place">
+                                    <input type="text" class="ccid-issue-place" id="ccid-issue-place" name="identityPlace">
                                 </div>
                                 <div></div>
                                     
                                 <div>
                                     <label for="employee-email">Email<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input type="email" class="employee-email" id="employee-email">
+                                    <input type="email" class="employee-email" id="employee-email" name="email" required>
                                 </div>
         
                                 <div>
                                     <label for="employee-phonenum">Số điện thoại<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input type="number" class="employee-phonenum" id="employee-phonenum">
+                                    <input class="employee-phonenum" id="employee-phonenum" name="phoneNumber" required>
                                 </div>
                             </div>
                         </div>
@@ -178,81 +178,95 @@
                             <div class="form-b-fields">
                                 <div>
                                     <label for="employee-position">Vị trí</label><br>
-                                    <div class="dropdown" id="employee-gender">
+                                    <input class="employee-position" name="employee-position" hidden>
+                                    <div class="dropdown position-dropdown" id="employee-position" onmouseenter="applySelect(this);">
                                         <div class="hint">Vị trí</div>
-                                        <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
-                                        <div class="dropdown-data" id="data-gender">
-                                            <div class="dropdown-item">
-                                                <div class="dropdown-item-text">Nam</div>
-                                            </div>
-                                            <div class="dropdown-item">
-                                                <div class="dropdown-item-text">Nữ</div>
-                                            </div>
-                                        </div>
+                                        <div class="caret" id="caret-position" onclick="openSelect(this);"><i class="fas fa-angle-down"></i></div>
+                                        <div class="dropdown-data" id="data-position"></div>
                                     </div>
                                 </div>
         
                                 <div>
-                                    <label for="employee-place">Phòng ban</label><br>
-                                    <div class="dropdown" id="employee-gender">
+                                    <label for="employee-department">Phòng ban</label><br>
+                                    <input class="employee-department" name="employee-department" hidden>
+                                    <div class="dropdown place-dropdown" id="employee-department" onmouseenter="applySelect(this);">
                                         <div class="hint">Phòng ban</div>
-                                        <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
-                                        <div class="dropdown-data" id="data-gender">
-                                            <div class="dropdown-item">
-                                                <div class="dropdown-item-text">Phòng đào tạo</div>
-                                            </div>
-                                            <div class="dropdown-item">
-                                                <div class="dropdown-item-text">Phòng nhân sự</div>
-                                            </div>
-                                        </div>
+                                        <div class="caret" id="caret-department" onclick="openSelect(this);"><i class="fas fa-angle-down"></i></div>
+                                        <div class="dropdown-data" id="data-department"></div>
                                     </div>
                                 </div>
                             
                                 <div>
                                     <label for="employee-taxnum">Mã số thuế cá nhân</label><br>
-                                    <input type="number" class="employee-taxnum" id="employee-taxnum">
+                                    <input class="employee-taxnum" id="employee-taxnum" name="personalTaxCode">
                                 </div>
                                 
                                 <div class="salary-input">
                                     <label for="employee-salary">Mức lương cơ bản</label><br>
-                                    <input class="employee-salary" id="employee-salary">
+                                    <input class="employee-salary" id="employee-salary" onkeyup="splitDot(this);" name="salary">
                                     <div class="currency">(VNĐ)</div>
                                 </div>
                             
                                 <div>
                                     <label for="employee-joindate">Ngày gia nhập công ty</label><br>
-                                    <input type="date" class="employee-joindate" id="employee-joindate">
+                                    <input type="date" class="employee-joindate" id="employee-joindate" name="joinDate">
                                 </div>
                                 
                                 <div>
                                     <label for="employee-status">Tình trạng công việc</label><br>
-                                    <div class="dropdown" id="employee-gender">
+                                    <input class="employee-status" name="employee-status" hidden>
+                                    <div class="dropdown" id="employee-status" onmouseenter="applySelect(this);">
                                         <div class="hint">Tình trạng công việc</div>
-                                        <div class="caret" id="caret-gender"><i class="fas fa-angle-down"></i></div>
-                                        <div class="dropdown-data" id="data-gender">
+                                        <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>                                        <div class="caret" id="caret-work-status" onclick="openSelect(this);"><i class="fas fa-angle-down"></i></div>
+                                        <div class="dropdown-data" id="data-work-status">
                                             <div class="dropdown-item">
-                                                <div class="dropdown-item-text">Nam</div>
+                                                <div class="dropdown-item-icon"></div>
+                                                <div class="dropdown-item-text">0</div>
                                             </div>
                                             <div class="dropdown-item">
-                                                <div class="dropdown-item-text">Nữ</div>
+                                                <div class="dropdown-item-icon"></div>
+                                                <div class="dropdown-item-text">1</div>
+                                            </div>
+                                            <div class="dropdown-item">
+                                                <div class="dropdown-item-icon"></div>
+                                                <div class="dropdown-item-text">2</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form></div>
                 </div>
         
                 <div class="foot">
-                    <button class="btn"><span class="btn-icon"><i class="far fa-save"></i></span> Lưu</button>
-                    <button class="btn-2" id="cancel-modal">Hủy</button>
+                    <button class="btn" type="submit" form="employee-form"><span class="btn-icon"><i class="far fa-save"></i></span> Lưu</button>
+                    <button class="btn-2" id="cancel-modal" onclick="openModal(this, 'warning-modal');">Hủy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-wrapper" id="warning-modal">
+            <div class="modal">
+                <div class="head">
+                    <div class="title">Đóng form thông tin nhân viên</div>
+                    <div class="close"></div>
+                </div>
+                <div class="body">
+                    <div class="icon"></div>
+                    <div class="text">Bạn có chắc chắn muốn đóng form nhập <b>"Thông tin nhân viên"</b> hay không?</div>
+                </div>
+                <div class="foot">
+                    <button class="btn btn-danger" onclick="closeModal(this, 'warning-modal', 'employee-form-modal');">Xóa</button>
+                    <button class="btn-2" onclick="closeModal(this, 'warning-modal');">Hủy</button>
                 </div>
             </div>
         </div>
 
         <!------------------------------------------------>
         <script src="../js/page/employee.js"></script>
+        <script src="../js/component/dropdown.js"></script>
         <script src="../js/component/combobox.js"></script>
+        <script src="../js/component/transition.js"></script>
     </body>
 </html>

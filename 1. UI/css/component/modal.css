@@ -13,7 +13,8 @@
 
 .modal-wrapper .modal {
     background-color: #ffffff;
-    width: calc(100% - 48px); /* minus two padding 24 */
+    width: 60%;
+    /* width: calc(100% - 48px); minus two padding 24 */
     /* height: calc(100vh - 96px); */
     height: fit-content; /* fit background to full form */
     margin: 24px 24px 24px 24px;
@@ -66,6 +67,7 @@
 
 .modal-wrapper .modal .body .text {
     margin-left: 10px;
+    line-height: 40px;
 }
 
 
@@ -143,6 +145,12 @@
 .modal-wrapper .modal .body .right {
     height: inherit; /* modal body height */
     width: 70%;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-title,
+.modal-wrapper .modal .body .right .form-b .form-b-title {
+    font-family: GoogleSans-Bold;
+    font-size: 16px;
 }
 
 .modal-wrapper .modal .body .right .form-a-fields {

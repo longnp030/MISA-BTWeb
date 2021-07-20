@@ -1,144 +1,224 @@
-/*** FORM ***/
+$(document).ready(function () {
+    // Thuc hien load du lieu
 
-/* open form btn */
-var addEmployeeBtn = document.getElementById("add-employee-btn");
-/* form */
-var employeeForm = document.getElementById("employee-form");
+    console.log("Start loading data...")
+    employee = new Employee()
+    console.log("Done loading!")
 
-/* function to display form */
-addEmployeeBtn.onclick = function () {
-    employeeForm.style.display = "block";
-};
+    /*** Xu ly button cho modal va dropdown ***/
+    $("employee-form").submit(function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
 
-/* functions to close form */
+        $.ajax({
+            url: "http://cukcuk.manhnv.net/v1/Employees",
+            method: "POST",
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            cache: false,
+            processData: false
+        }).done(function () {
+            alert("Submitted successfully!")
+        }).fail(function () {
+            alert("Submit failed!")
+        });
+    });
 
-/* click X or outside to close */
-employeeForm.addEventListener("click", function(event) {
-    if (event.target.matches("#close-modal") || !event.target.closest(".modal")) {
-        employeeForm.style.display = "none";
+    $('input[required]').blur(function () {
+        let value = $(this).val();
+        if (value == "") {
+            $(this).addClass("invalid");
+            $(this).attr('title', "Ok");
+        } else {
+            $(this).removeClass("invalid");
+        }
+    })
+});
+
+/**
+ * Dinh dang lai ngay thang nam
+ * @param {any} date 
+ * @returns String dd/mm/yyyy
+ * Author: NPLONG (19/07/2021)
+ */
+function formatDate(date) {
+    if (!date) {
+        return "";
+    } else {
+        let newDate = new Date(date);
+
+        let day = newDate.getDate() < 10 ? "0" + newDate.getDate() : newDate.getDate();
+        let month = newDate.getMonth() + 1 < 10 ? "0" + (newDate.getMonth() + 1) : newDate.getMonth() + 1;
+        let year = newDate.getFullYear();
+
+        return `${day}/${month}/${year}`;
     }
-}, false); // click here is "employee-form" click and not involve with document
+}
 
-/* press ESC to close */
-document.addEventListener("keyup", function(event) {
-    if (event.key === "Escape") {
-        employeeForm.style.display = "none";
+/**
+ * Ham chuyen dinh dang so thanh dang tien te
+ * @param {any} money 
+ * @returns dinh dang hien thi tien te
+ * Author: NPLONG (19/07/2021)
+ */
+function formatMoney(money) {
+    if (!money) {
+        return "";
+    } else {
+        return money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
     }
+}
+
+/**
+ * Ham open popup (o day la form nhan vien)
+ * @param {*} node button de mo modal, co the la div, button, span ... (clickable)
+ * Author: NPLONG (19/07/2021)
+ */
+function openModal(node, modalId) {
+    $($(node).parents("#content").children("#" + modalId)[0]).css("display", "block");
+}
+
+/**
+ * Ham de dong modal
+ * @param {*} node button de dong modal (clickable)
+ * Author: NPLONG (19/07/2021)
+ */
+function closeModal(node, parentModalId, relModalId) {
+    if (relModalId) {
+        $(node).parents('#content').children("#" + relModalId).css("display", "none");
+        $(node).parents("#" + parentModalId).css("display", "none");
+    } else {
+        $(node).parents("#" + parentModalId).css("display", "none");
+    }
+}
+
+
+/**
+ * Ham dao nguoc so 1234 -> 4321
+ * Dao nguoc de dung regex tach 3 chu so 1, vi du 12345 -> 123 45; 1234 -> 123 4
+ * Tien thi danh dau cham moi 3 chu so tu cuoi len -> dao nguoc
+ * @param {number} input 
+ * @returns so dao nguoc
+ * REF: http://plnkr.co/edit/rsTCO8hmZUSEtrvpuWE6?p=preview&preview
+ */
+function reverseNumber(input) {
+    return [].map.call(input, function (x) {
+        return x;
+    }).reverse().join('');
+}
+/**
+ * Ham binh thuong hoa so, vi du 12.34 -> 1234
+ * @param {number} input 
+ * @returns so khong chua dau cham
+ * REF: http://plnkr.co/edit/rsTCO8hmZUSEtrvpuWE6?p=preview&preview
+ */
+function plainNumber(number) {
+    return number.split('.').join('');
+}
+/**
+ * Ham tu dong them dau cham moi 3 chu so khi nhap tien
+ * @param {input} input input field
+ * REF: http://plnkr.co/edit/rsTCO8hmZUSEtrvpuWE6?p=preview&preview
+ * REF: https://stackoverflow.com/questions/32759353/how-to-get-automatic-dots-in-number-input
+ */
+function splitDot(input) {
+    var value = input.value, // lay chu so trong input ra
+        plain = plainNumber(value), // loai bo dau cham trong so
+        reversed = reverseNumber(plain), // dao nguoc so
+        reversedWithDots = reversed.match(/.{1,3}/g).join('.'), // them dau cham moi 3 chu so
+        normal = reverseNumber(reversedWithDots); // dao nguoc de tro lai so ban dau
+
+    console.log(plain, reversed, reversedWithDots, normal);
+    input.value = normal;
+}
+
+
+/**
+ * Ham kiem tra da nhap dung dinh dang input hay chua
+ * @param {input} input 
+ * Author: NPLONG (20/07/2021)
+ */
+function validate(input) {
+    var value = input.value;
+    if (isNaN(value)) {
+        $(input).addClass("invalid");
+    } else {
+        $(input).removeClass("invalid");
+    }
+}
+
+
+/**
+ * Ham xu ly event khi bam dropdown hoac combobox
+ * @param {button} button the caret on dropdown and combobox to trigger the open of items
+ * Author: NPLONG (19/07/2021)
+ * REF: https://stackoverflow.com/questions/42333757/multiple-dropdown-menus-using-same-js-code
+ */
+function openSelect(button) {
+    var selects = $($(button).parents().children(".dropdown-data"));
+    if (selects.length != 0) {
+        select = $(selects[0]);
+    } else {
+        select = $($(button).parents().children(".combobox-data")[0]);
+    }
+
+    if (select.css("display") === "none") {
+        select.css("display", "block");
+    } else {
+        select.css("display", "none");
+    }
+}
+
+
+$("#btn-save").click(function () {
+    // thu thap du lieu
+    let emp = {};
+
+    emp.fullName = $('fullname').val()
+    emp.empCode = $('code').val()
+    // ... cac thong tin khac
+
+    // Goi API luu du lieu:
+    $.ajax({
+        url: "",
+        method: "POST",
+        data: JSON.stringify(emp),
+        contentType: "application/json",
+
+    }).done(function (res) { alert("THEM MOI OK"); }).fail(function () { });
 })
 
-/* click Cancel to close */
-var cancelModal = document.getElementById("cancel-modal");
-cancelModal.onclick = function () {
-    employeeForm.style.display = "none";
-}
-
-
-/*** DROPDOWNS ***/
-
-
-/* get dropdown -> working place */
-
-/* the dropdown itself */
-var place = document.getElementById("place");
-/* caret to show items */
-var caretPlace = document.getElementById("caret-place");
-/* items */
-var dataPlace = document.getElementById("data-place");
-
-/* functions to show/hide dropdown */
-caretPlace.onclick = function() {
-    if (dataPlace.style.display === "none") {
-        dataPlace.style.display = "block";
-        place.classList.add("active");
-    } else {
-        dataPlace.style.display = "none";
-        place.classList.remove("active");
+class Employee extends HumanBase {
+    constructor() {
+        super();
     }
-}
 
+    initEvents() {
+        // Click button hien thi form thong tin chi tiet
+        $("#add-employee-btn").click(function() {
+            $($(this).parents("#content").children("#employee-form-modal")[0]).css("display", "block");
+        });
 
-/* get dropdown -> working position */
+        // Reload
+        $("#reload").click(function () {
+            // Xoa du lieu cu trong bang truoc
+            $(".table table tbody").html("");
+            employee.loadData();
+        });
 
-/* the caret to show items */
-var caretPosition = document.getElementById("caret-position");
-/* items */
-var dataPosition = document.getElementById("data-position");
-
-/* functions to show/hide dropdown */
-caretPosition.onclick = function() {
-    if (dataPosition.style.display === "none") {
-        dataPosition.style.display = "block";
-    } else {
-        dataPosition.style.display = "none";
-    }
-}
-
-
-/* get dropdown -> gender selection in employee form */
-
-/* caret to show items */
-var caretGender = document.getElementById("caret-gender");
-/* items */
-var dataGender = document.getElementById("data-gender");
-
-/* functions to show/hide dropdown */
-caretGender.onclick = function() {
-    if (dataGender.style.display === "none") {
-        dataGender.style.display = "block";
-    } else {
-        dataGender.style.display = "none";
-    }
-}
-
-
-/* function to load data from API to table - employee list */
-function loadEmployee(employee_list) {
-    for (let i = 0; i < employee_list.length; i++) {
-        tr = $("<tr/>");
-        tr.append('<td><label class="checkbox"><input type="checkbox"><span class="checkmark"></span></label></td>');
-        tr.append("<td>" + employee_list[i].EmployeeCode + "</td>");
-        tr.append("<td>" + employee_list[i].FullName + "</td>");
-        tr.append("<td>" + employee_list[i].Gender + "</td>")
-        tr.append("<td>" + employee_list[i].DateOfBirth.substring(0, 10) + "</td>");
-        tr.append("<td>" + employee_list[i].PhoneNumber + "</td>");
-        tr.append("<td>" + employee_list[i].Email + "</td>");
-        tr.append("<td>" + employee_list[i].PositionName + "</td>");
-        tr.append("<td>" + employee_list[i].DepartmentName + "</td>");
-        tr.append('<td style="text-align: right; padding-right: 20px;">' + employee_list[i].Salary.toString().split('').reverse().join('').match(/.{1,3}/g).join('.').split('').reverse().join('') + "</td>");
-        tr.append("<td>" + employee_list[i].WorkStatus + "</td>");
-
-        tbody = $(".table table tbody");
-        tbody.append(tr);
-    }
-}
-function loadAPI() {
-    $.ajax({
-        type: "GET",
-        url: "http://cukcuk.manhnv.net/v1/Employees",
-        success: function(result) {
-            if (result != null) {
-                employeeList = result;
-                console.log(employeeList[0]);
-                
-                loadEmployee(employeeList);
+        /* press ESC to close modal */
+        $(document).keyup(function (e) {
+            if (e.keyCode == 27) {
+                $("#employee-form-modal").css("display", "none");
             }
-        },
-        error: function(e) {
-            console.log("ERROR: ", e);
-        }
-    });
-}
-loadAPI();
+        })
 
-
-/* change table row color when checkbox being selected */
-// window.getComputedStyle($(".checkmark")[0]).getPropertyValue('background-color')
-
-var trs = $('.table tbody tr');
-for (let i = 0; i < trs.length; i++ ) {
-    if (window.getComputedStyle(trs[i].children[0].children[0].children[1]).getPropertyValue("background-color") === "rgb(1, 145, 96)") {
-        trs[i].style.backgroundColor =" #ebf9f4";
-    } else {
-        trs[i].style.backgroundColor =" #ffffff";
+        /* click X or outside to close */
+        var employeeForm = document.getElementById("employee-form-modal")
+        employeeForm.addEventListener("click", function (event) {
+            if (event.target.matches("#close-modal") || !event.target.closest(".modal")) {
+                employeeForm.style.display = "none";
+            }
+        }, false); // click here is "employee-form-modal" click and not involve with document
     }
 }

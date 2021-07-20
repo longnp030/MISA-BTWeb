@@ -35,7 +35,7 @@
     width: 272px;
 }
 
-.filter .left .search, .filter .left .place {
+.filter .left .search, .filter .left .place-dropdown {
     margin-right: 16px;
 }
 

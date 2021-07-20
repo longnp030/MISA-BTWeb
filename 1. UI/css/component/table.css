@@ -13,6 +13,25 @@ table tr {
     height: 48px;
 }
 
+/* style each column */
+table > thead > tr > :nth-child(2), table > tbody > tr > :nth-child(2) { /* employee code */
+    width: 68px;
+}
+
+table > thead > tr > :nth-child(5), table > tbody > tr > :nth-child(5) { /* date of birth */
+    width: 69px;
+    text-align: center;
+}
+
+table > thead > tr > :nth-child(6), table > tbody > tr > :nth-child(6) { /* phone number */
+    width: 73px;
+}
+
+table > tbody > tr > :nth-child(10) { /* salary */
+    text-align: right;
+    width: 69px;
+}
+
 table th, td {
     border-bottom: 1px solid #bbbbbb;
     padding: 0 10px 0 0;
@@ -26,7 +45,7 @@ table tbody tr:hover {
 }
 
 table thead tr th:first-child, table tbody tr td:first-child {
-    width: 10px;
+    width: 4px;
     padding: 0 26px 0 16px; /* 26 = 16 page padding-left + 10 */
 }
 
