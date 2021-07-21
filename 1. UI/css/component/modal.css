@@ -13,8 +13,8 @@
 
 .modal-wrapper .modal {
     background-color: #ffffff;
-    width: 60%;
-    /* width: calc(100% - 48px); minus two padding 24 */
+    /* width: 60%; */
+    width: calc(100% - 48px); minus two padding 24
     /* height: calc(100vh - 96px); */
     height: fit-content; /* fit background to full form */
     margin: 24px 24px 24px 24px;

@@ -37,6 +37,7 @@
     color: #bbbbbb;
     background-color: #ffffff;
     display: none;
+    flex-grow: 4;
 }
 
 .dropdown .caret {

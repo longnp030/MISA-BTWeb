@@ -4,23 +4,29 @@ $(function () {
 
 class HumanBase {
     constructor() {
+        this.dataUrl = "http://cukcuk.manhnv.net/v1/Employees";
         this.loadData();
         this.initEvents();
+    }
+
+    getDataUrl() {
+        return this.dataUrl;
     }
 
     loadData() {
         // Lay thong tin du lieu se map voi cac cot
         $.ajax({
-            url: "http://cukcuk.manhnv.net/v1/Employees", // Dia chi API
+            url: this.getDataUrl(), // Dia chi API
             method: "GET", // Phuong thuc GET-lay du lieu, PUT-sua, POST-them moi, DELETE-xoa
             // data: '', // Tham so truyen len API qua body request. Neu khong co thi khong can khai bao
             // dataType: 'json',
             // contentType: 'json', // Kieu du lieu lay ve
             // async: True, // Dong bo/ Bat dong bo
         }).done(function (res) {
+            $(".employee-count").text(res.length); // Dien du lieu so nhan vien vao paging
             $.each(res, function (index, human) {
                 let ths = $('table thead th');
-                let tr = $(`<tr></tr>`);
+                let tr = $(`<tr id="${human.EmployeeId}"></tr>`);
                 // Lay thong tin cac cot du lieu
                 $.each(ths, function (index, th) {
                     // Lay ten cua column
@@ -38,6 +44,8 @@ class HumanBase {
                             value = formatDate(value);
                         } else if (field === "Salary") {
                             value = formatMoney(value);
+                        } else if (!value) {
+                            value = "";
                         }
 
                         let td = `<td>${value}</td>`

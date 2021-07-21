@@ -41,11 +41,12 @@ function fillDepartmentDropdownData() {
         method: "GET"
     }).done(function(res){
         let departments = res
-        console.log(departments);
+        // console.log(departments);
         departments.forEach(department => {
             let departmentName = department.DepartmentName;
+            let departmentId = department.DepartmentId;
 
-            let dropdownItem = `<div class="dropdown-item">
+            let dropdownItem = `<div class="dropdown-item" uuid="${departmentId}">
                                     <div class="dropdown-item-icon"></div>
                                     <div class="dropdown-item-text">${departmentName}</div>
                                 </div>`;
@@ -69,8 +70,9 @@ function fillPositionDropdownData() {
         // console.log(positions);
         positions.forEach(position => {
             let positionName = position.PositionName;
+            let positionId = position.PositionId;
 
-            let dropdownItem = `<div class="dropdown-item">
+            let dropdownItem = `<div class="dropdown-item" uuid="${positionId}">
                                     <div class="dropdown-item-icon"></div>
                                     <div class="dropdown-item-text">${positionName}</div>
                                 </div>`;
@@ -87,11 +89,15 @@ function fillPositionDropdownData() {
  * Author: NPLONG (20/07/2021)
  */
 function applySelect(dropdown) {
+    // Default text
+    defaultText = $(dropdown).find(".hint").text();
+    // console.log(defaultText);
+
     dropdownId = $(dropdown).attr("id");
-    console.log(dropdownId);
+    // console.log(dropdownId);
     items = $(dropdown).find('.dropdown-item');
-    console.log(dropdown);
-    console.log(items);
+    // console.log(dropdown);
+    // console.log(items);
 
     $(items).on('click', function(e, manuel) {
         if (typeof manuel === 'undefined' || manuel === false) {
@@ -113,9 +119,14 @@ function applySelect(dropdown) {
 
             // assign option to input field (if exist)
             inputField = $(dropdown).parents().find(`input[name='${dropdownId}']`);
-            console.log(inputField);
+            // console.log(inputField);
             if (inputField.length > 0) {
-                inputField.val(this.textContent.trim());
+                // If the div has uuid then we must assign this uuid to input, not text
+                if (typeof $(this).attr("uuid") !== "undefined") {
+                    inputField.val($(this).attr("uuid"));
+                } else{
+                    inputField.val(this.textContent.trim());
+                }
             }
 
             // display the clear option button
@@ -144,7 +155,8 @@ function applySelect(dropdown) {
             });
 
             // Apply the text of the selected option to the outermost div
-            $($(dropdown).find('.hint')[0]).text(this.textContent.trim());
+            $($(dropdown).find('.hint')[0]).css("display", "none")
+            $($(dropdown).find('.text-over')[0]).text(this.textContent.trim());
         } else {
             // console.log(this.textContent);
         }
@@ -161,7 +173,14 @@ function clearSelect(button) {
     dropdown = $(button).parents('.dropdown')[0];
 
     // Change back text of outermost div to default
-    $($(dropdown).find('.hint')[0]).text("");
+    $($(dropdown).find('.text-over')[0]).text("");
+    $($(dropdown).find('.hint')[0]).css("display", "block");
+
+    // If there is an input before, clear input value
+    inputOfDropdown = $($(button).parents().parents()[0]).children("input");
+    if (inputOfDropdown && inputOfDropdown.length > 0) {
+        $(inputOfDropdown[0]).val("");
+    }
 
     // Style all options to default
     $(dropdown).find('.dropdown-item').css({
