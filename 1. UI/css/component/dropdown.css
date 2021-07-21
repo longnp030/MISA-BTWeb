@@ -14,7 +14,8 @@
     font-family: GoogleSans-Regular;
 }
 
-.dropdown:active, .dropdown:hover  {
+.dropdown:active, .dropdown:hover, .dropdown:focus  {
+    outline: none;
     border-color: #019160;
 }
 

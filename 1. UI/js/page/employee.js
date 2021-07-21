@@ -171,7 +171,21 @@ class Employee extends HumanBase {
         // Click button hien thi form thong tin chi tiet
         $("#add-employee-btn").click(function () {
             $($(this).parents("#content").children("#employee-form-modal")[0]).css("display", "block");
+
+            // Reset form
             $('input').val(null);
+
+            // Tu dong gen ma nhan vien moi va auto focus
+            $.ajax({
+                url: "http://cukcuk.manhnv.net/v1/Employees/NewEmployeeCode",
+                method: "GET",
+            }).done(function (res) {
+                $("#employee-code").val(res);
+                $("#employee-code").focus();
+            }).fail(function () {
+                alert("Lay ma nhan vien moi khong thanh cong")
+            })
+
             // Bam vao nut them thi la ADD
             thisClass.formMode = "ADD";
         });
@@ -321,27 +335,27 @@ class Employee extends HumanBase {
 
 
                         // css item trong dropdown :OK
-                            // this is the one we click and is triggered last, we will css this
+                        // this is the one we click and is triggered last, we will css this
                         $(thisDropdownItem).css({
                             'background-color': "#019160",
                             'color': "#ffffff",
                         });
-                            // return the other options to default status
+                        // return the other options to default status
                         $(thisDropdown).find('.dropdown-item').not(thisDropdownItem).css({
                             'background-color': "#ffffff",
                             'color': "#000000",
                         });
-                            // display checkmark beside the selected item :OK
+                        // display checkmark beside the selected item :OK
                         $($(thisDropdownItem).find('.dropdown-item-icon')[0]).css({
                             'display': 'block',
                             'background-color': "#ffffff",
                         });
                         // when displaying checkmark, push all options to right
-                            // dont push the one we click
+                        // dont push the one we click
                         $($(thisDropdownItem).find('.dropdown-item-text')[0]).css({
                             'margin-left': '0',
                         });
-                            // push all other ones
+                        // push all other ones
                         $(thisDropdown).find('.dropdown-item').not(thisDropdownItem).find('.dropdown-item-text').css({
                             'margin-left': '26px',
                         });
@@ -364,6 +378,37 @@ class Employee extends HumanBase {
 
             // Build len form
             $("#employee-form-modal").css("display", "block");
+        })
+
+
+        /**
+         * Ham xu ly click vao checkbox moi tr, doi mau tr neu checked
+         * Author: NPLONG (21/07/2021)
+         * REF: https://stackoverflow.com/questions/34556768/how-to-remove-style-on-second-click
+         */
+        $(".table table tbody").on("mouseup", ".checkbox", function () {
+            console.log(this);
+
+            let checked = !$(this).data("checked");
+            $(this).data("checked", checked);
+
+            if (checked) {
+                $(this).parents('tr').addClass("checked");
+                $(this).parents('tr').css("background-color", "#ebf9f4");
+            } else {
+                $(this).parents('tr').removeClass("checked");
+                $(this).parents('tr').css("background-color", "");
+            }
+        })
+
+
+        $("#search").keyup(function () {
+            let query = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+            $('.table table tbody').find("tr").show().filter(function() {
+                var text = $(this).find('td').text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(query);
+            }).hide();
         })
 
 

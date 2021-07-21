@@ -17,7 +17,7 @@
 
         <div class="filter">
             <div class="left">
-                <input type="text" class="search icon-input" placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại">
+                <input type="text" id="search" class="search icon-input" placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại">
 
                 <div class="dropdown place-dropdown" id="place-dropdown" onmouseenter="applySelect(this);">
                     <div class="hint">Tất cả phòng ban</div>
@@ -111,23 +111,23 @@
                             <div class="form-a-fields">
                                 <div>
                                     <label for="employee-code">Mã nhân viên<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input tabindex="0" type="text" field="EmployeeCode" class="employee-code" id="employee-code" name="employeeCode" required>
+                                    <input tabindex="1" type="text" field="EmployeeCode" class="employee-code" id="employee-code" name="employeeCode" required>
                                 </div>
         
                                 <div>
                                     <label for="employee-name">Họ và tên<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input tabindex="1" type="text" field="FullName" class="employee-name" id="employee-name" name="fullName" required>
+                                    <input tabindex="2" type="text" field="FullName" class="employee-name" id="employee-name" name="fullName" required>
                                 </div>
                                 
                                 <div>
                                     <label for="employee-dob">Ngày sinh</label><br>
-                                    <input type="date" field="DateOfBirth" class="employee-dob" id="employee-dob" name="dateOfBirth">
+                                    <input tabindex="3" type="date" field="DateOfBirth" class="employee-dob" id="employee-dob" name="dateOfBirth">
                                 </div>
         
                                 <div>
                                     <label for="employee-gender">Giới tính</label><br>
                                     <input class="employee-gender" field="gender" name="employee-gender" hidden>
-                                    <div class="dropdown" id="employee-gender" onmouseenter="applySelect(this);">
+                                    <div tabindex="4" class="dropdown" id="employee-gender" onmouseenter="applySelect(this);">
                                         <div class="hint">Giới tính</div>
                                         <div class="text-over"></div>
                                         <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>                                        
@@ -151,28 +151,28 @@
         
                                 <div>
                                     <label for="employee-ccid">Số CMTND/Căn cước<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input class="employee-ccid" id="employee-ccid" name="identityNumber" onkeyup="validate(this);" required>
+                                    <input tabindex="5" class="employee-ccid" id="employee-ccid" name="identityNumber" onkeyup="validate(this);" required>
                                 </div>
         
                                 <div>
                                     <label for="ccid-date">Ngày cấp</label><br>
-                                    <input type="date" class="ccid-date" id="ccid-date" name="identityDate">
+                                    <input tabindex="6" type="date" class="ccid-date" id="ccid-date" name="identityDate">
                                 </div>
         
                                 <div>
                                     <label for="ccid-issue-place">Nơi cấp</label><br>
-                                    <input type="text" class="ccid-issue-place" id="ccid-issue-place" name="identityPlace">
+                                    <input tabindex="7" type="text" class="ccid-issue-place" id="ccid-issue-place" name="identityPlace">
                                 </div>
                                 <div></div>
                                     
                                 <div>
                                     <label for="employee-email">Email<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input type="email" field="Email" class="employee-email" id="employee-email" name="email" required>
+                                    <input tabindex="8" type="email" field="Email" class="employee-email" id="employee-email" name="email" required>
                                 </div>
         
                                 <div>
                                     <label for="employee-phonenum">Số điện thoại<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-                                    <input field="PhoneNumber" class="employee-phonenum" id="employee-phonenum" name="phoneNumber" onkeyup="validate(this);" required>
+                                    <input tabindex="9" field="PhoneNumber" class="employee-phonenum" id="employee-phonenum" name="phoneNumber" onkeyup="validate(this);" required>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +183,7 @@
                                 <div>
                                     <label for="employee-position">Vị trí</label><br>
                                     <input field="positionId" class="employee-position" name="employee-position" hidden>
-                                    <div class="dropdown position-dropdown" id="employee-position" onmouseenter="applySelect(this);">
+                                    <div tabindex="10" class="dropdown position-dropdown" id="employee-position" onmouseenter="applySelect(this);">
                                         <div class="hint">Vị trí</div>
                                         <div class="text-over"></div>
                                         <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>
@@ -195,7 +195,7 @@
                                 <div>
                                     <label for="employee-department">Phòng ban</label><br>
                                     <input field="departmentId" class="employee-department" name="employee-department" hidden>
-                                    <div class="dropdown place-dropdown" id="employee-department" onmouseenter="applySelect(this);">
+                                    <div tabindex="11" class="dropdown place-dropdown" id="employee-department" onmouseenter="applySelect(this);">
                                         <div class="hint">Phòng ban</div>
                                         <div class="text-over"></div>
                                         <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>                                        
@@ -206,24 +206,24 @@
                             
                                 <div>
                                     <label for="employee-taxnum">Mã số thuế cá nhân</label><br>
-                                    <input class="employee-taxnum" id="employee-taxnum" name="personalTaxCode">
+                                    <input tabindex="12" class="employee-taxnum" id="employee-taxnum" name="personalTaxCode">
                                 </div>
                                 
                                 <div class="salary-input">
                                     <label for="employee-salary">Mức lương cơ bản</label><br>
-                                    <input field="salary" class="employee-salary" id="employee-salary" onkeyup="splitDot(this); validate(this);" name="salary">
+                                    <input tabindex="13" field="salary" class="employee-salary" id="employee-salary" onkeyup="splitDot(this); validate(this);" name="salary">
                                     <div class="currency">(VNĐ)</div>
                                 </div>
                             
                                 <div>
                                     <label for="employee-joindate">Ngày gia nhập công ty</label><br>
-                                    <input type="date" class="employee-joindate" id="employee-joindate" name="joinDate">
+                                    <input tabindex="14" type="date" class="employee-joindate" id="employee-joindate" name="joinDate">
                                 </div>
                                 
                                 <div>
                                     <label for="employee-status">Tình trạng công việc</label><br>
                                     <input field="workStatus" class="employee-status" name="employee-status" hidden>
-                                    <div class="dropdown" id="employee-status" onmouseenter="applySelect(this);">
+                                    <div tabindex="15" class="dropdown" id="employee-status" onmouseenter="applySelect(this);">
                                         <div class="hint">Tình trạng công việc</div>
                                         <div class="text-over"></div>
                                         <button type="button" class="btn-2 btn-clear" onclick="clearSelect(this);"><i class="fas fa-times-circle"></i></button>                                        <div class="caret" id="caret-work-status" onclick="openSelect(this);"><i class="fas fa-angle-down"></i></div>
