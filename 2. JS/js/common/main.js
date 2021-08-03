@@ -2,7 +2,7 @@ $(function () {
     $("#content").load("employee.html");
 });
 
-class HumanBase {
+class PageBase {
     constructor() {
         this.dataUrl = "http://cukcuk.manhnv.net/v1/Employees";
         this.loadData();
@@ -24,9 +24,9 @@ class HumanBase {
             // async: True, // Dong bo/ Bat dong bo
         }).done(function (res) {
             $(".employee-count").text(res.length); // Dien du lieu so nhan vien vao paging
-            $.each(res, function (index, human) {
+            $.each(res, function (index, employee) {
                 let ths = $('table thead th');
-                let tr = $(`<tr id="${human.EmployeeId}"></tr>`);
+                let tr = $(`<tr id="${employee.EmployeeId}"></tr>`);
                 // Lay thong tin cac cot du lieu
                 $.each(ths, function (index, th) {
                     // Lay ten cua column
@@ -37,7 +37,7 @@ class HumanBase {
                         $(tr).append('<td><label class="checkbox"><input type="checkbox"><span class="checkmark"></span></label></td>')
                     } else {
                         // Lay ra du lieu tuong ung ten column
-                        let value = human[field];
+                        let value = employee[field];
 
                         // Check xem co phai ngay thang hay tien luong khong de con format du lieu cho dung
                         if (field === "DateOfBirth") {
@@ -55,6 +55,18 @@ class HumanBase {
 
                 $('table tbody').append(tr);
             });
+
+            // Paging table
+            $(".table table").fancyTable({
+                pagination: true,
+                perPage: 9,
+                pagClosest: 2,
+                globalSearch: false,
+                searchable: false,
+                paginationClass: 'btn-2 i-page',
+                paginationClassActive: 'active',
+                paginationElement: '.paging .center',
+            })
         }).fail(function (res) {
             // Dua ra thong bao loi cu the tuy theo http code: 400 404 405 500
             // Thong thuong thi:

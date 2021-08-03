@@ -302,7 +302,7 @@ class Employee extends HumanBase {
                     // vi cai "res" minh lay ve co thuoc tinh la chu dau viet hoa, con html cua  minh thi chu dau viet thuong
                     let fieldName = $(this).attr("field").charAt(0).toUpperCase() + $(this).attr("field").slice(1);
                     let fieldValue = res[fieldName]; // fieldValue la tu api tra ve
-                    console.log(fieldName);
+                    console.log(fieldName, fieldValue);
 
                     // Map input voi nhung truong dac biet can xu ly
                     if (fieldName === "DateOfBirth") {
@@ -310,7 +310,6 @@ class Employee extends HumanBase {
                     } else if (fieldName === "Salary") {
                         fieldValue = formatMoney(fieldValue);
                     } else if (fieldName === "Gender" || fieldName === "PositionId" || fieldName === "DepartmentId" || fieldName === "WorkStatus") {
-                        // console.log(this);
                         let idOfField = null
                         if (fieldName === "Gender") {
                             idOfField = "#employee-gender";
@@ -321,8 +320,9 @@ class Employee extends HumanBase {
                         } else if (fieldName === "WorkStatus") {
                             idOfField = "#employee-status";
                         }
+
                         let thisDropdown = $(this).parents().find(idOfField);
-                        // console.log(thisDropdown);
+                        // console.log(thisDropdown);                        
 
                         // Tim ra item (row) co id giong input value
                         let thisDropdownItem = null;
@@ -332,44 +332,74 @@ class Employee extends HumanBase {
                             }
                         })
                         console.log(thisDropdownItem);
+                        
+                        if (fieldValue) {
+                            // console.log(this);
+                            // css item trong dropdown :OK
+                            // this is the one we click and is triggered last, we will css this
+                            $(thisDropdownItem).css({
+                                'background-color': "#019160",
+                                'color': "#ffffff",
+                            });
+                            // return the other options to default status
+                            $(thisDropdown).find('.dropdown-item').not(thisDropdownItem).css({
+                                'background-color': "#ffffff",
+                                'color': "#000000",
+                            });
+                            // display checkmark beside the selected item :OK
+                            $($(thisDropdownItem).find('.dropdown-item-icon')[0]).css({
+                                'display': 'block',
+                                'background-color': "#ffffff",
+                            });
+                            // when displaying checkmark, push all options to right
+                            // dont push the one we click
+                            $($(thisDropdownItem).find('.dropdown-item-text')[0]).css({
+                                'margin-left': '0',
+                            });
+                            // push all other ones
+                            $(thisDropdown).find('.dropdown-item').not(thisDropdownItem).find('.dropdown-item-text').css({
+                                'margin-left': '26px',
+                            });
 
 
-                        // css item trong dropdown :OK
-                        // this is the one we click and is triggered last, we will css this
-                        $(thisDropdownItem).css({
-                            'background-color': "#019160",
-                            'color': "#ffffff",
-                        });
-                        // return the other options to default status
-                        $(thisDropdown).find('.dropdown-item').not(thisDropdownItem).css({
-                            'background-color': "#ffffff",
-                            'color': "#000000",
-                        });
-                        // display checkmark beside the selected item :OK
-                        $($(thisDropdownItem).find('.dropdown-item-icon')[0]).css({
-                            'display': 'block',
-                            'background-color': "#ffffff",
-                        });
-                        // when displaying checkmark, push all options to right
-                        // dont push the one we click
-                        $($(thisDropdownItem).find('.dropdown-item-text')[0]).css({
-                            'margin-left': '0',
-                        });
-                        // push all other ones
-                        $(thisDropdown).find('.dropdown-item').not(thisDropdownItem).find('.dropdown-item-text').css({
-                            'margin-left': '26px',
-                        });
+                            // hien thi text len div :OK
+                            $($(thisDropdown).find('.hint')[0]).css("display", "none")
+                            $($(thisDropdown).find('.text-over')[0]).text($(thisDropdownItem).find('.dropdown-item-text')[0].textContent.trim());
 
 
-                        // hien thi text len div :OK
-                        $($(thisDropdown).find('.hint')[0]).css("display", "none")
-                        $($(thisDropdown).find('.text-over')[0]).text($(thisDropdownItem).find('.dropdown-item-text')[0].textContent.trim());
+                            // them clear button :OK
+                            $($(thisDropdown).find('.btn-clear')[0]).css({
+                                'display': "block",
+                            });
+                        } else {
+                            fieldValue = "";
 
+                            // return the options to default status
+                            $(thisDropdown).find('.dropdown-item').css({
+                                'background-color': "#ffffff",
+                                'color': "#000000",
+                            });
 
-                        // them clear button :OK
-                        $($(thisDropdown).find('.btn-clear')[0]).css({
-                            'display': "block",
-                        })
+                            // hide checkmark beside the selected item :OK
+                            $(thisDropdownItem).find('.dropdown-item-icon').css({
+                                'display': 'block',
+                                'background-color': "#ffffff",
+                            });
+
+                            // push all options to left
+                            $(thisDropdownItem).find('.dropdown-item-text').css({
+                                'margin-left': '0',
+                            });
+
+                            // loai bo text o outermost div :OK
+                            $($(thisDropdown).find('.hint')[0]).css("display", "block")
+                            $($(thisDropdown).find('.text-over')[0]).text("");
+
+                            // hide clear button :OK
+                            $($(thisDropdown).find('.btn-clear')[0]).css({
+                                'display': "none",
+                            });
+                        }
                     }
 
                     $(this).val(fieldValue);
@@ -405,7 +435,7 @@ class Employee extends HumanBase {
         $("#search").keyup(function () {
             let query = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
 
-            $('.table table tbody').find("tr").show().filter(function() {
+            $('.table table tbody').find("tr").show().filter(function () {
                 var text = $(this).find('td').text().replace(/\s+/g, ' ').toLowerCase();
                 return !~text.indexOf(query);
             }).hide();
