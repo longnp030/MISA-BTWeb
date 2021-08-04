@@ -18,7 +18,9 @@ import {
 	faUserTimes,
 	faUserPlus,
 	faCheck,
-	faSave
+	faSave,
+	faTimes,
+	faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
@@ -28,6 +30,8 @@ library.add(
 	faUserPlus,
 	faCheck,
 	faSave,
+	faTimes,
+	faExclamationCircle,
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 

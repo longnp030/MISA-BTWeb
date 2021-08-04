@@ -3,7 +3,7 @@
         <div class="modal">
             <div class="head">
                 <div class="title">{{ title }}</div>
-                <div class="close"></div>
+                <div class="close" @click="btnNoOnClick"></div>
             </div>
             <div class="body">
                 <div class="icon"></div>
@@ -53,7 +53,7 @@ export default {
             this.$emit('btnYesOnClick');
         },
         btnNoOnClick: function() {
-            this.$emit('btnNoOnClick');
+            this.$emit('btnYesOnClick', true);
         }
     },
 }

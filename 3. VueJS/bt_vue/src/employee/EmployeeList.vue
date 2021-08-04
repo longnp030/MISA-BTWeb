@@ -25,7 +25,6 @@
             title="Xóa bản ghi"
             textContent="Bạn có chắc muốn xóa các nhân viên không?"
             :isHidden="isHidden"
-            @btnNoOnCLick="btnNoOnClick"
             @btnYesOnClick="btnYesOnClick"/>
     </div>
 
@@ -33,7 +32,7 @@
         <div class="left">
             <input type="text" id="search" class="search icon-input" placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại">
 
-            <!--TODO:   Lam the nao de call API 1 lan ma lay dc data cho tat ca dropdown
+            <!--TODO: Lam the nao de call API 1 lan ma lay dc data cho tat ca dropdown
                 ANS: No way!! Call API to fetch dropdown data each time dropdown is clicked-->
 
             <BaseDropdown
@@ -57,7 +56,7 @@
         <table cellspacing="0">
             <thead>
                 <tr>
-                    <th field="CheckMark"></th>
+                    <th field="CheckMark"><label class="checkbox"><input type="checkbox" @click="checkAllOnClick($event)"><span class="checkmark"></span></label></th>
                     <th field="EmployeeCode"   title="Mã nhân viên">Mã nhân viên</th>
                     <th field="FullName"       title="Họ và tên">Họ và tên</th>
                     <th field="GenderName"     title="Giới tính">Giới tính</th>
@@ -71,26 +70,29 @@
                 </tr>
             </thead>
         
-            <tbody>
-                <tr v-for="employee in employees" 
-                    :key="employee.EmployeeId" 
-                    :data-id="employee.EmployeeId"
-                    @dblclick="rowOnDblClick(employee.EmployeeId)">
-                    <!--TODO: Tai sao function trong methods lai run 2 lan?
-                        ANS: Do khai bao @click o parent, khi click se an 2 event-->
-                    <!--TODO: Tai sao neu de prevent thi khi click khong nhan css?-->
-                    <td><label class="checkbox" ><input type="checkbox" @click="checkRowOnClick($event, employee)"><span class="checkmark"></span></label></td>
-                    <td>{{ employee.EmployeeCode   }}</td>
-                    <td>{{ employee.FullName       }}</td>
-                    <td>{{ employee.GenderName     }}</td>
-                    <td>{{ employee.DateOfBirth    }}</td>
-                    <td>{{ employee.PhoneNumber    }}</td>
-                    <td>{{ employee.Email          }}</td>
-                    <td>{{ employee.PositionName   }}</td>
-                    <td>{{ employee.DepartmentName }}</td>
-                    <td>{{ employee.Salary         }}</td>
-                    <td>{{ employee.WorkStatus     }}</td>
-                </tr>
+            <tbody> 
+                <!-- <tr><td><label class="checkbox"><input type="checkbox" @click="checkRowOnClick($event, employee)"><span class="checkmark"></span></label></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td></tr> -->
+            <tr v-for="employee in employees" 
+                :key="employee.EmployeeId" 
+                :data-id="employee.EmployeeId"
+                @dblclick="rowOnDblClick(employee.EmployeeId)">
+                <!--TODO: Tai sao function trong methods lai run 2 lan?
+                    ANS: Do khai bao @click o parent, khi click se an 2 event-->
+                <!--TODO: Tai sao neu de prevent thi khi click khong nhan css?
+                    ANS: Như câu hỏi bên trên, đặt ở thằng cha mà prevent thì 
+                        chỉ nhận cha -->
+            <td><label class="checkbox"><input type="checkbox" @click="checkRowOnClick($event, employee)"><span class="checkmark"><font-awesome-icon class="visible-icon hidden" icon="check"/></span></label></td>
+            <td title="employee.EmployeeCode  ">{{ employee.EmployeeCode   }}</td>
+            <td title="employee.FullName      ">{{ employee.FullName       }}</td>
+            <td title="employee.GenderName    ">{{ employee.GenderName     }}</td>
+            <td title="employee.DateOfBirth   ">{{ employee.DateOfBirth | moment    }}</td>
+            <td title="employee.PhoneNumber   ">{{ employee.PhoneNumber    }}</td>
+            <td title="employee.Email         ">{{ employee.Email          }}</td>
+            <td title="employee.PositionName  ">{{ employee.PositionName   }}</td>
+            <td title="employee.DepartmentName">{{ employee.DepartmentName }}</td>
+            <td title="employee.Salary        ">{{ employee.Salary | money         }}</td>
+            <td title="employee.WorkStatus    ">{{ employee.WorkStatus     }}</td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -101,7 +103,7 @@
         <input class="center" v-model="today" type="date">
         <span class="right"> Money {{ salary }}</span>
     </div>
-
+    <BaseChipToast textContent="HAHAHAHA" iconClass="exclamation-circle" :show="true"/>
     <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick"/>
 </div>
 </template>
@@ -114,6 +116,7 @@ import EmployeeForm from '../employee/EmployeeForm.vue'
 import BaseButton from '../base/BaseButton.vue'
 import BaseDropdown from '../base/BaseDropdown.vue'
 import BaseModal from '../base/BaseModal.vue'
+import BaseChipToast from '../base/BaseChipToast.vue'
 
 export default {
     name: "EmployeeList",
@@ -122,6 +125,7 @@ export default {
         BaseButton,
         BaseDropdown,
         BaseModal,
+        BaseChipToast,
     },
     mounted() {
         var self = this;
@@ -145,7 +149,7 @@ export default {
             positions: [],
             selectedEmpls: [],
             today: moment('2017-02-01T00:00:00.000Z').format("YYYY-MM-DD"),//.diff(moment('Aug 04 2021')) < 0,
-            salary: '',
+            salary: 412312,
         }
     },
     props: {
@@ -201,7 +205,8 @@ export default {
                 checked = false;
             }
             thisTr.setAttribute("data-checked", checked);
-
+            
+            this.selectedEmpls = [...this.selectedEmpls];
             if (checked) {
                 this.selectedEmpls.push(emp);
                 thisTr.classList.add("checked");
@@ -211,6 +216,45 @@ export default {
                 this.selectedEmpls.splice(idx, 1);
                 thisTr.classList.remove("checked");
                 console.log(this.selectedEmpls);
+            }
+        },
+
+        checkAllOnClick(event) {
+            let thisTh = event.currentTarget.parentNode.parentNode.parentNode;
+
+            let checked = false;
+            if (thisTh.getAttribute("data-checked") === null) {
+                checked = true;
+            } else if (thisTh.getAttribute("data-checked") === 'false') { 
+                checked = true;
+            } else if (thisTh.getAttribute("data-checked") === 'true') {
+                checked = false;
+            }
+            thisTh.setAttribute("data-checked", checked);
+
+            if (checked) {
+                this.selectedEmpls = new Set(this.selectedEmpls);
+                this.employees.forEach(employee => {
+                    this.selectedEmpls.add(employee);
+                });
+                console.log(this.selectedEmpls);
+
+                let allTrs = document.querySelectorAll('tbody tr');
+                allTrs.forEach(tr => {
+                    tr.classList.add("checked");
+                    tr.setAttribute("data-checked", checked);
+                    tr.querySelector('.visible-icon').classList.remove('hidden');
+                });
+            } else {
+                this.selectedEmpls = [];
+                console.log(this.selectedEmpls);
+
+                let allTrs = document.querySelectorAll('tbody tr');
+                allTrs.forEach(tr => {
+                    tr.classList.remove("checked");
+                    tr.setAttribute("data-checked", !checked);
+                    tr.querySelector('.visible-icon').classList.add('hidden');
+                });
             }
         },
 
@@ -227,12 +271,9 @@ export default {
             }
         },
 
-        btnNoOnClick: function() {
-            console.log(this.isHidden);
-            this.isHidden = true;
-        },
-
-        btnYesOnClick: function() {
+        btnYesOnClick: function(isHidden) {
+            this.isHidden = isHidden;
+            this.selectedEmpls = [...this.selectedEmpls];
             console.log(this.selectedEmpls);
             for (let i = 0; i < this.selectedEmpls.length; i++) {
                 console.log(this.selectedEmpls[i].EmployeeId);
@@ -243,5 +284,13 @@ export default {
             this.salary = this.salary.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
     },
+    filters: {
+        moment: function(date) {
+            return moment(date).format("DD/MM/YYYY");
+        },
+        money: function(money) {
+            return !money ? '' : money.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+    }
 }
 </script>

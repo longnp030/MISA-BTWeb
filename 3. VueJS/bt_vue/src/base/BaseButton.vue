@@ -1,7 +1,7 @@
 <template>
 	<div :class="buttonDivClass">
 		<button :class="buttonClass" :id="buttonId" @click="btnOnClick">
-			<span class="btn-icon" :class="{'hideIcon': hideIcon}"><font-awesome-icon :icon="iconClass"/></span>
+			<span class="btn-icon" :class="{'hideIcon': hideIcon}"><font-awesome-icon v-if="!hideIcon" :icon="iconClass"/></span>
 			<span class="btn-text">{{ buttonText }}</span>
 		</button>
 	</div>

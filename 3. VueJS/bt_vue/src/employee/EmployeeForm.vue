@@ -29,7 +29,7 @@
 
 							<div class="form-group" :class="{ 'form-group--error': $v.dob.$error }">
 								<label class="form__label">Ngày sinh</label>
-								<input class="form__input" v-model.trim="$v.dob.$model" v-model="employee.DateOfBirth" tabindex="3" type="date"/>
+								<input class="form__input" :value="employee.DateOfBirth | moment" tabindex="3" type="date"/>
 							</div>
 	
 							<div>
@@ -101,14 +101,16 @@
 								<label for="employee-position">Vị trí</label><br>
 								<BaseDropdown
 									dropdownId="position"
-									dropdownHint="Vị trí"/>
+									dropdownHint="Vị trí"
+									:dropdownInputVal="employee.PositionId"/>
 							</div>
 	
 							<div>
 								<label for="employee-department">Phòng ban</label><br>
 								<BaseDropdown
 									dropdownId="department"
-									dropdownHint="Phòng ban"/>
+									dropdownHint="Phòng ban"
+									:dropdownInputVal="employee.DepartmentId"/>
 							</div>
 						
 							<div class="form-group" :class="{ 'form-group--error': $v.taxNum.$error }">
@@ -118,7 +120,7 @@
 
 							<div class="salary-input form-group" :class="{ 'form-group--error': $v.salary.$error }">
 								<label class="form__label">Mức lương cơ bản</label>
-								<input class="form__input" v-model.trim="$v.salary.$model" v-model="employee.Salary" tabindex="13"/>
+								<input class="form__input" :value="employee.Salary | money" @input="handleMoneyInputChange" tabindex="13"/>
 								<div class="currency">(VNĐ)</div>
 							</div>
 						
@@ -185,12 +187,16 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
+
 import BaseButton from '../base/BaseButton.vue';
 import BaseDropdown from '../base/BaseDropdown.vue';
 
 import {
-	required, numeric, alpha, email
+	required, numeric, email
 } from 'vuelidate/lib/validators';
+
+const nameMustBe = (value) => /^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+\s{1})+[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+$/.test(value);
 
 export default {
 	components: {
@@ -265,6 +271,10 @@ export default {
 					});
 			}
 		},
+
+        handleMoneyInputChange: function() {
+            this.employee.Salary = this.employee.Salary.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
 	},
 	watch: {
 		/**
@@ -299,12 +309,12 @@ export default {
 		newEmployeeId: function() {
 			this.employee.EmployeeId = this.newEmployeeId;
 			console.log(this.employee);
-		}
+		},
 	},
 	validations: {
 		name: {
 			required,
-			alpha,
+			nameMustBe,
 		},
 		dob: {
 
@@ -327,6 +337,15 @@ export default {
 		salary: {
 			numeric,
 		}
+	},
+	filters: {
+		moment: function(date) {
+			console.log(moment(date));
+            return moment(date).format("YYYY-MM-DD");
+        },
+		money: function(money) {
+            return !money ? '' : money.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
 	}
 }
 </script>
