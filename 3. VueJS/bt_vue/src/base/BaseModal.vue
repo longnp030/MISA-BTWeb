@@ -1,17 +1,24 @@
 <template>
     <div class="modal-wrapper" :class="{'hidden': isHidden}">
-        <div class="modal">
+        <div class="modal" :class="{'mini': mini, 'danger': danger, 'warn': warn}">
             <div class="head">
                 <div class="title">{{ title }}</div>
                 <div class="close" @click="btnNoOnClick"></div>
             </div>
             <div class="body">
-                <div class="icon"></div>
+                <div class="icon"><font-awesome-icon icon="exclamation-triangle"/></div>
                 <div class="text">{{ textContent }}</div>
+                <div></div>
+                <div class="obj-list">
+                    <div class="obj-container" v-for="obj in objs" :key="obj.EmployeeId">
+                        <div>{{ obj.EmployeeCode }}</div>
+                        <div>{{ obj.FullName }}</div>
+                    </div>
+                </div>
             </div>
             <div class="foot">
                 <BaseButton
-                    buttonClass="btn btn-danger"
+                    :buttonClass="{'btn': true, 'btn-danger': danger,}"
                     buttonText="Đồng ý"
                     :hideIcon="hideIcon"
                     v-on:btnOnClick="btnYesOnClick"/>
@@ -46,13 +53,29 @@ export default {
         isHidden: {
             type: Boolean,
             default: true,
-        }
+        },
+        objs: {
+            type: Object,
+        },
+        mini: {
+            type: Boolean,
+            default: true,
+        },
+        danger: {
+            type: Boolean,
+            default: false,
+        },
+        warn: {
+            type: Boolean,
+            default: false,
+        },
     },
     methods: {
         btnYesOnClick: function() {
             this.$emit('btnYesOnClick');
         },
         btnNoOnClick: function() {
+            console.log("no on click.");
             this.$emit('btnYesOnClick', true);
         }
     },

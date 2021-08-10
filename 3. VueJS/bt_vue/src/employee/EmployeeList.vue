@@ -23,8 +23,11 @@
 
         <BaseModal 
             title="Xóa bản ghi"
-            textContent="Bạn có chắc muốn xóa các nhân viên không?"
+            textContent="Bạn có chắc muốn xóa các nhân viên sau không?"
             :isHidden="isHidden"
+            :mini="true"
+            :danger="true"
+            :objs="selectedEmpls"
             @btnYesOnClick="btnYesOnClick"/>
     </div>
 
@@ -33,30 +36,31 @@
             <input type="text" id="search" class="search icon-input" placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại">
 
             <!--TODO: Lam the nao de call API 1 lan ma lay dc data cho tat ca dropdown
-                ANS: No way!! Call API to fetch dropdown data each time dropdown is clicked-->
+                ANS: No way!! Call API to fetch dropdown data each time dropdown is clicked
+                UPDATE 09/08/2021: TERNARY OPERATOR while fetch api data!!! fetch right when created-->
 
             <BaseDropdown
-                dropdownId="department"
+                dropdownId="departmentFilter"
                 dropdownHint="Tất cả phòng ban"/>
 
             <BaseDropdown
-                dropdownId="position"
+                dropdownId="positionFilter"
                 dropdownHint="Tất cả vị trí"/>
         </div>
         
-        <!-- <div class="right">
+        <div class="right">
             <BaseButton
                 buttonClass="btn-2 reload"
-                buttonId="reload"
+                :hideIcon="true"
                 v-on:btnOnClick="btnReloadOnClick"/>
-        </div> -->
+        </div>
     </div>
 
     <div class="table">
         <table cellspacing="0">
             <thead>
                 <tr>
-                    <th field="CheckMark"><label class="checkbox"><input type="checkbox" @click="checkAllOnClick($event)"><span class="checkmark"></span></label></th>
+                    <th field="CheckMark"><label class="checkbox"><input type="checkbox" @click="checkAllOnClick($event)"><span class="checkmark"><font-awesome-icon class="visible-icon hidden" icon="check"/></span></label></th>
                     <th field="EmployeeCode"   title="Mã nhân viên">Mã nhân viên</th>
                     <th field="FullName"       title="Họ và tên">Họ và tên</th>
                     <th field="GenderName"     title="Giới tính">Giới tính</th>
@@ -82,29 +86,28 @@
                     ANS: Như câu hỏi bên trên, đặt ở thằng cha mà prevent thì 
                         chỉ nhận cha -->
             <td><label class="checkbox"><input type="checkbox" @click="checkRowOnClick($event, employee)"><span class="checkmark"><font-awesome-icon class="visible-icon hidden" icon="check"/></span></label></td>
-            <td title="employee.EmployeeCode  ">{{ employee.EmployeeCode   }}</td>
-            <td title="employee.FullName      ">{{ employee.FullName       }}</td>
-            <td title="employee.GenderName    ">{{ employee.GenderName     }}</td>
-            <td title="employee.DateOfBirth   ">{{ employee.DateOfBirth | moment    }}</td>
-            <td title="employee.PhoneNumber   ">{{ employee.PhoneNumber    }}</td>
-            <td title="employee.Email         ">{{ employee.Email          }}</td>
-            <td title="employee.PositionName  ">{{ employee.PositionName   }}</td>
-            <td title="employee.DepartmentName">{{ employee.DepartmentName }}</td>
-            <td title="employee.Salary        ">{{ employee.Salary | money         }}</td>
-            <td title="employee.WorkStatus    ">{{ employee.WorkStatus     }}</td>
+            <td :title="employee.EmployeeCode ">{{ employee.EmployeeCode   }}</td>
+            <td :title="employee.FullName     ">{{ employee.FullName       }}</td>
+            <td :title="employee.GenderName    ">{{ employee.GenderName     }}</td>
+            <td :title="employee.DateOfBirth   ">{{ employee.DateOfBirth? moment(employee.DateOfBirth).format('DD/MM/YYYY') : ''}}</td>
+            <td :title="employee.PhoneNumber   ">{{ employee.PhoneNumber    }}</td>
+            <td :title="employee.Email         ">{{ employee.Email          }}</td>
+            <td :title="employee.PositionName  ">{{ employee.PositionName   }}</td>
+            <td :title="employee.DepartmentName">{{ employee.DepartmentName }}</td>
+            <td :title="employee.Salary        ">{{ employee.Salary | money         }}</td>
+            <td :title="employee.WorkStatus    ">{{ employee.WorkStatus     }}</td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="paging">
+    <!-- <div class="paging">
         <span class="left">Paging {{ today }}</span>
-        <!-- <input class="center" v-model="salary" @keyup="handleMoneyInputChange"> -->
+        <input class="center" v-model="salary" @keyup="handleMoneyInputChange">
         <input class="center" v-model="today" type="date">
         <span class="right"> Money {{ salary }}</span>
-    </div>
-    <BaseChipToast textContent="HAHAHAHA" iconClass="exclamation-circle" :show="true"/>
-    <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick"/>
+    </div> -->
+    <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick" @reload="btnReloadOnClick"/>
 </div>
 </template>
 
@@ -112,11 +115,14 @@
 import axios from 'axios';
 import moment from 'moment';
 
+import Vue from 'vue'
+import AxiosPlugin from 'vue-axios-cors';
+Vue.use(AxiosPlugin)
+
 import EmployeeForm from '../employee/EmployeeForm.vue'
 import BaseButton from '../base/BaseButton.vue'
 import BaseDropdown from '../base/BaseDropdown.vue'
 import BaseModal from '../base/BaseModal.vue'
-import BaseChipToast from '../base/BaseChipToast.vue'
 
 export default {
     name: "EmployeeList",
@@ -125,13 +131,12 @@ export default {
         BaseButton,
         BaseDropdown,
         BaseModal,
-        BaseChipToast,
     },
     mounted() {
         var self = this;
-        axios.get("http://cukcuk.manhnv.net/v1/Employees")
+        axios.get("https://localhost:5001/api/Employees/")
             .then((res) => {
-                self.employees = res.data;
+                self.employees = res.data.slice(1, 20);
             })
             .catch((res) => {
                 console.log(res);
@@ -143,7 +148,7 @@ export default {
             isHidden: true, // alert modal
             isHide: true, // form modal
             employeeId: '',
-            newEmployeeId: null,
+            newEmployeeId: '',
             formMode: 0,
             departments: [],
             positions: [],
@@ -164,14 +169,28 @@ export default {
             this.formMode = 0;
 
             if (getNewEmplCode) {
-                axios.get("http://cukcuk.manhnv.net/v1/Employees/NewEmployeeCode")
+                axios.get("https://localhost:5001/api/Employees/NewEmployeeCode/")
                     .then((res) => {
                         this.newEmployeeId = res.data;
                     })
                     .catch(() => {});
             } else {
                 this.newEmployeeId = null;
+                console.log("emplList line 178, data: emplCode: ", this.employeeCode);
             }
+        },
+
+        btnReloadOnClick() {
+            console.log("Reloading..");
+            var self = this;
+            axios.get("https://localhost:5001/api/Employees/")
+                .then((res) => {
+                    self.employees = res.data;
+                })
+                .catch((res) => {
+                    console.log(res);
+                });
+            console.log("Reloaded!");
         },
         
         /**
@@ -179,7 +198,8 @@ export default {
          * Author: NPLONG (30/07/2021)
          */
         rowOnDblClick(emplId) {
-            this.employeeId = emplId;
+            console.log("line 200 emplList: this.employeeId: ", this.employeeId, "this.newemployeeId:", this.newEmployeeId);
+            this.employeeId = emplId + "!";
             this.isHide = false;
             this.formMode = 1;
         },
@@ -194,6 +214,7 @@ export default {
             // (e.target.parentNode.parentNode.parentNode).className += "checked";
 
             // debugger; // eslint-disable-line no-debugger
+            console.log(event.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('thead .visible-icon'))
             let thisTr = event.currentTarget.parentNode.parentNode.parentNode;
 
             let checked = false;
@@ -210,15 +231,26 @@ export default {
             if (checked) {
                 this.selectedEmpls.push(emp);
                 thisTr.classList.add("checked");
+
+                event.currentTarget.parentNode.querySelector(".visible-icon").classList.remove("hidden");
+                
                 console.log(this.selectedEmpls);
             } else {
                 let idx = this.selectedEmpls.findIndex(empl => empl.EmployeeCode === emp.EmployeeCode);
                 this.selectedEmpls.splice(idx, 1);
                 thisTr.classList.remove("checked");
+
+                event.currentTarget.parentNode.querySelector(".visible-icon").classList.add("hidden");
+                event.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('thead .visible-icon').classList.add("hidden");
+                
                 console.log(this.selectedEmpls);
             }
         },
 
+        /**
+         * Ham xu ly chon/ bo chon tat ca cac nhan vien
+         * Author: NPLONG (02/08/2021)
+         */
         checkAllOnClick(event) {
             let thisTh = event.currentTarget.parentNode.parentNode.parentNode;
 
@@ -233,6 +265,8 @@ export default {
             thisTh.setAttribute("data-checked", checked);
 
             if (checked) {
+                event.currentTarget.parentNode.querySelector(".visible-icon").classList.remove("hidden");
+
                 this.selectedEmpls = new Set(this.selectedEmpls);
                 this.employees.forEach(employee => {
                     this.selectedEmpls.add(employee);
@@ -246,13 +280,15 @@ export default {
                     tr.querySelector('.visible-icon').classList.remove('hidden');
                 });
             } else {
+                event.currentTarget.parentNode.querySelector(".visible-icon").classList.add("hidden");
+
                 this.selectedEmpls = [];
                 console.log(this.selectedEmpls);
 
                 let allTrs = document.querySelectorAll('tbody tr');
                 allTrs.forEach(tr => {
                     tr.classList.remove("checked");
-                    tr.setAttribute("data-checked", !checked);
+                    tr.setAttribute("data-checked", checked);
                     tr.querySelector('.visible-icon').classList.add('hidden');
                 });
             }
@@ -265,7 +301,7 @@ export default {
         btnDelOnClick() {
             // let toDelEmpls = document.getElementsByClassName('checked');
             if (this.selectedEmpls.length === 0) {
-                alert("Ban chua chon nhan vien nao!");
+                this.$toast.warning("Bạn chưa chọn nhân viên nào")
             } else {
                 this.isHidden = false;
             }
@@ -285,9 +321,6 @@ export default {
         }
     },
     filters: {
-        moment: function(date) {
-            return moment(date).format("DD/MM/YYYY");
-        },
         money: function(money) {
             return !money ? '' : money.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }

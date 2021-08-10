@@ -18,78 +18,54 @@
 						<div class="form-a-fields">
 							<div>
 								<label for="employee-code">Mã nhân viên<span class="required"> (<span class="asterisk"></span>)</span></label><br>
-								<input v-if="newEmployeeId" :value="newEmployeeId" tabindex="1" type="text" field="EmployeeCode" class="employee-code" id="employee-code" name="employeeCode" required>
-								<input v-else v-model="employee.EmployeeCode" tabindex="1" type="text" field="EmployeeCode" class="employee-code" id="employee-code" name="employeeCode" required>
+								<input ref="employeeId" v-if="newEmployeeId" :value="newEmployeeId" tabindex="1" type="text">
+								<input ref="employeeId" v-else v-model="employee.EmployeeCode" tabindex="1" type="text">
 							</div>
 
-							<div class="form-group" :class="{ 'form-group--error': $v.name.$error }">
+							<div class="form-group" :class="{ 'form-group--error': nameError }">
 								<label class="form__label">Họ và tên<span class="required"> (<span class="asterisk"></span>)</span></label>
-								<input class="form__input" v-model.trim="$v.name.$model" v-model="employee.FullName" tabindex="2" type="text"/>
+								<input class="form__input" :value="employee.FullName" @input="nameOnInput($event)" tabindex="2" type="text"/>
 							</div>
 
-							<div class="form-group" :class="{ 'form-group--error': $v.dob.$error }">
+							<div class="form-group" :class="{ 'form-group--error': dobError }">
 								<label class="form__label">Ngày sinh</label>
-								<input class="form__input" :value="employee.DateOfBirth | moment" tabindex="3" type="date"/>
+								<datepicker v-model="employee.DateOfBirth" :format="'DD/MM/YYYY'" :value-type="'YYYY-MM-DD'" tabindex="3" placeholder="DD/MM/YYYY"></datepicker>
 							</div>
 	
 							<div>
 								<label for="employee-gender">Giới tính</label><br>
-								<input v-model="employee.Gender" class="employee-gender" field="gender" name="employee-gender" hiddenn>
-								<div tabindex="4" class="dropdown" id="employee-gender">
-									<div class="hint">Giới tính</div>
-									<div class="text-over"></div>
-									<button type="button" class="btn-2 btn-clear"><font-awesome-icon icon="times-circle"/></button>                                        
-									<div class="caret" id="caret-gender"><font-awesome-icon icon="angle-down"/></div>
-									<div class="dropdown-data" id="data-gender">
-										<div class="dropdown-item" uuid="1">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">Nam</div>
-										</div>
-										<div class="dropdown-item" uuid="0">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">Nữ</div>
-										</div>
-										<div class="dropdown-item" uuid="2">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">Không xác định</div>
-										</div>
-										<div class="dropdown-item" uuid="3">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">Không xác định</div>
-										</div>
-										<div class="dropdown-item" uuid="4">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">Không xác định</div>
-										</div>
-									</div>
-								</div>
+								<BaseDropdown
+									dropdownId="gender"
+									dropdownHint="Giới tính"
+									:employee="employee"
+									:dropdownInputVal="employee.Gender"/>
 							</div>
 							
-							<div class="form-group" :class="{ 'form-group--error': $v.ccid.$error }">
+							<div class="form-group" :class="{ 'form-group--error': ccidError }">
 								<label class="form__label">Số CMTND/Căn cước<span class="required"> (<span class="asterisk"></span>)</span></label>
-								<input class="form__input" v-model.trim="$v.ccid.$model" v-model="employee.IdentityNumber" tabindex="5" type="number"/>
+								<input class="form__input" v-model="employee.IdentityNumber" tabindex="5"/>
+							</div>
+	
+							<div class="form-group" :class="{ 'form-group--error': ccidDateError }">
+								<label class="form__label">Ngày cấp</label><br>
+								<datepicker v-model="employee.IdentityDate" :format="'DD/MM/YYYY'" :value-type="'YYYY-MM-DD'" tabindex="6" placeholder="DD/MM/YYYY"></datepicker>
 							</div>
 	
 							<div>
-								<label for="ccid-date">Ngày cấp</label><br>
-								<input v-model="employee.IdentityDate" tabindex="6" type="date" class="ccid-date" id="ccid-date" name="identityDate">
-							</div>
-	
-							<div>
-								<label for="ccid-issue-place">Nơi cấp</label><br>
-								<input v-model="employee.IdentityPlace" tabindex="7" type="text" class="ccid-issue-place" id="ccid-issue-place" name="identityPlace">
+								<label>Nơi cấp</label><br>
+								<input v-model="employee.IdentityPlace" tabindex="7" type="text">
 							</div>
 							
 							<div></div>
 								
-							<div class="form-group" :class="{ 'form-group--error': $v.email.$error }">
+							<div class="form-group" :class="{ 'form-group--error': emailError }">
 								<label class="form__label">Email<span class="required"> (<span class="asterisk"></span>)</span></label>
-								<input class="form__input" v-model.trim="$v.email.$model" v-model="employee.Email" tabindex="8" type="email"/>
+								<input class="form__input" :value="employee.Email" @input="emailOnInput($event)" tabindex="8" type="email"/>
 							</div>
 	
-							<div class="form-group" :class="{ 'form-group--error': $v.phoneNum.$error }">
+							<div class="form-group" :class="{ 'form-group--error': phoneError }">
 								<label class="form__label">Số điện thoại<span class="required"> (<span class="asterisk"></span>)</span></label>
-								<input class="form__input" v-model.trim="$v.phoneNum.$model" v-model="employee.PhoneNumber" tabindex="9"/>
+								<input class="form__input" :value="employee.PhoneNumber" @input="phoneOnInput($event)" tabindex="9"/>
 							</div>
 						</div>
 					</div>
@@ -113,53 +89,28 @@
 									:dropdownInputVal="employee.DepartmentId"/>
 							</div>
 						
-							<div class="form-group" :class="{ 'form-group--error': $v.taxNum.$error }">
+							<div class="form-group" :class="{ 'form-group--error': taxError }">
 								<label class="form__label">Mã số thuế cá nhân</label>
-								<input class="form__input" v-model.trim="$v.taxNum.$model" v-model="employee.PersonalTaxCode" tabindex="12"/>
+								<input class="form__input" v-model="employee.PersonalTaxCode" tabindex="12"/>
 							</div>								
 
-							<div class="salary-input form-group" :class="{ 'form-group--error': $v.salary.$error }">
+							<div class="salary-input form-group" :class="{ 'form-group--error': salaryError }">
 								<label class="form__label">Mức lương cơ bản</label>
-								<input class="form__input" :value="employee.Salary | money" @input="handleMoneyInputChange" tabindex="13"/>
+								<input class="form__input" :value="employee.Salary | money" @input="salaryOnInput($event)" tabindex="13"/>
 								<div class="currency">(VNĐ)</div>
 							</div>
 						
 							<div>
 								<label for="employee-joindate">Ngày gia nhập công ty</label><br>
-								<input v-model="employee.JoinDate" tabindex="14" type="date" class="employee-joindate" id="employee-joindate" name="joinDate">
+								<datepicker v-model="employee.JoinDate" :format="'DD/MM/YYYY'" :value-type="'YYYY-MM-DD'" tabindex="14" placeholder="DD/MM/YYYY"></datepicker>
 							</div>
 							
 							<div>
 								<label for="employee-status">Tình trạng công việc</label><br>
-								<input v-model="employee.WorkStatus" field="workStatus" class="employee-status" name="employee-status" hiddenn>
-								<div tabindex="15" class="dropdown" id="employee-status">
-									<div class="hint">Tình trạng công việc</div>
-									<div class="text-over"></div>
-									<button type="button" class="btn-2 btn-clear"><font-awesome-icon icon="times-circle"/></button>
-									<div class="caret" id="caret-work-status"><font-awesome-icon icon="angle-down"/></div>
-									<div class="dropdown-data" id="data-work-status">
-										<div class="dropdown-item" uuid="0">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">0</div>
-										</div>
-										<div class="dropdown-item" uuid="1">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">1</div>
-										</div>
-										<div class="dropdown-item" uuid="2">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">2</div>
-										</div>
-										<div class="dropdown-item" uuid="3">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">3</div>
-										</div>
-										<div class="dropdown-item" uuid="4">
-											<div class="dropdown-item-icon"><font-awesome-icon icon="check"/></div>
-											<div class="dropdown-item-text">4</div>
-										</div>
-									</div>
-								</div>
+								<BaseDropdown
+									dropdownId="workstatus"
+									dropdownHint="Tình trạng công việc"
+									:dropdownInputVal="employee.WorkStatus"/>
 							</div>
 						</div>
 					</div>
@@ -187,16 +138,10 @@
 
 <script>
 import axios from 'axios';
-import moment from 'moment';
+// import bus from '../js/eventBus';
 
 import BaseButton from '../base/BaseButton.vue';
 import BaseDropdown from '../base/BaseDropdown.vue';
-
-import {
-	required, numeric, email
-} from 'vuelidate/lib/validators';
-
-const nameMustBe = (value) => /^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+\s{1})+[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+$/.test(value);
 
 export default {
 	components: {
@@ -225,13 +170,14 @@ export default {
 	data() {
 		return {
 			employee: {},
-			name: '',
-			dob: '',
-			ccid: '',
-			email: '',
-			phoneNum: '',
-			taxNum: '',
-			salary: '',
+			nameError: false,
+			dobError: false,
+			ccidError: false,
+			ccidDateError: false,
+			emailError: false,
+			phoneError: false,
+			taxError: false,
+			salaryError: false,
 		}
 	},
 	methods: {
@@ -241,6 +187,7 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		btnCancelOnClick() {
+			console.log("cancel on click.");
 			this.$emit('btnAddOnClick', true, false);
 		},
 
@@ -249,32 +196,101 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		btnSaveOnClick() {
+			var self = this;
 			if (this.formMode == 0) {
-				axios.post(`http://cukcuk.manhnv.net/v1/Employees`, this.employee)
+				Object.keys(this.employee).forEach(key => {
+					console.log("key: ", key, " val: ", this.employee[key]);
+				});
+				axios.post(`https://localhost:5001/api/Employees/`, 
+							this.employee)
 					.then((res) => {
-						alert("Them thanh cong");
+						self.$toast.success("Thêm thành công");
 						console.log(res);
 					})
 					.catch((res) => {
-						alert("Them that bai")
-						console.log(res)
+						self.$toast.error("Thêm thất bại");
+						console.log(res.message);
 					});
+				this.$emit("btnAddOnClick", true, false);
+				this.$emit("reload");
 			} else {
-				axios.put(`http://cukcuk.manhnv.net/v1/Employees/${this.employeeId}`, this.employee)
+				Object.keys(this.employee).forEach(key => {
+					console.log("key: ", key, " val: ", this.employee[key]);
+				});
+				axios.put(`https://localhost:5001/api/Employees/${this.employeeId}/`, this.employee)
 					.then((res) => {
-						alert("Sua thanh cong");
+						self.$toast.success("Sửa thành công");
 						console.log(res);
 					})
 					.catch((res) => {
-						alert("Sua that bai");
-						console.log(res)
+						self.$toast.error("Sửa thất bại");
+						console.log(res);
 					});
+				this.$emit("btnAddOnClick", true, false);
+				this.$emit("reload");
 			}
 		},
 
-        handleMoneyInputChange: function() {
-            this.employee.Salary = this.employee.Salary.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
+		/**
+		 * Ham xu ly input salary
+		 * Author: NPLONG (07/08/2021)
+		 */
+		salaryOnInput(event) {
+			event.target.value = event.target.value.replaceAll('.', '');
+
+			// Check neu tien ma chua ki tu khong phai chu so thi bao error
+			if (!/^\d*$/.test(event.target.value)) {
+				this.salaryError = true;
+			} else {
+				this.salaryError = false;
+				this.employee.Salary = event.target.value;
+			}
+
+			// Hien thi tien da duoc them dau cham len form
+			event.target.value = event.target.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+		},
+
+		/**
+		 * Validate nhap ho va ten
+		 * Author: NPLONG (07/08/2021)
+		 */
+		nameOnInput(event) {
+			// Check neu ten ma khong phai dinh dang o duoi thi bao error
+			if (!/^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+\s{1})+[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+$/.test(event.target.value)) {
+				this.nameError = true;
+			} else {
+				this.nameError = false;
+				this.employee.FullName = event.target.value;
+			}
+		},
+
+		/**
+		 * Validate email
+		 * Author: NPLONG (07/08/2021)
+		 */
+		emailOnInput(event) {
+			// Check neu ten ma khong phai dinh dang o duoi thi bao error
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.target.value)) {
+				this.emailError = true;
+			} else {
+				this.emailError = false;
+				this.employee.Email = event.target.value;
+			}
+		},
+
+		/**
+		 * Validate so dien thoai
+		 * Author: NPLONG (07/08/2021)
+		 */
+		phoneOnInput(event) {
+			// Check neu so dien thoai ma chua ki tu khong phai chu so thi bao error
+			if (!/^0\d{9,10}$/.test(event.target.value)) {
+				this.phoneError = true;
+			} else {
+				this.phoneError = false;
+				this.employee.PhoneNumber = event.target.value;
+			}
+		},
 	},
 	watch: {
 		/**
@@ -282,14 +298,25 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		employeeId: function() {
+			console.log("emplForm watch emplId: ran into!, emplId: ", this.employeeId);
 			var self = this;
-			axios.get(`http://cukcuk.manhnv.net/v1/Employees/${this.employeeId}`)
-				.then((res) => {
-					self.employee = res.data;
-				})
-				.catch((res) => {
-					console.log(res);
-				});
+			this.employeeId = this.employeeId.replace('!', '');
+			if (this.formMode == 0) {
+				this.employee = {}
+			} else {
+				axios.get(`https://localhost:5001/api/Employees/${this.employeeId}`)
+					.then((res) => {
+						self.employee = res.data;
+					})
+					.catch((res) => {
+						console.log(res);
+					});
+			}
+			
+			this.$nextTick(() => {
+				this.$refs.employeeId.focus();
+			})
+			console.log("emplForm line 303: ", this);
 		},
 
 		/**
@@ -297,9 +324,15 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		formMode: function() {
+			console.log("emplForm, line 314, formMode watch: ran into!. formMode: ", this.formMode);
 			if (this.formMode == 0) {
 				this.employee = {};
+				this.employee.Gender = null;
+				this.employee.PositionId = null;
+				this.employee.DepartmentId = null;
+				this.employee.WorkStatus = null;
 			}
+			console.log("emplForm line 322, empl after formMode change: ", this.employee);
 		},
 
 		/**
@@ -307,45 +340,26 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		newEmployeeId: function() {
-			this.employee.EmployeeId = this.newEmployeeId;
+			console.log("line 330 emplform, prop: newEmplId: ", this.newEmployeeId);
+			console.log("line 331 emplform, data: empl: ", this.employee);
+			if (this.newEmployeeId) {
+				this.employee.EmployeeCode = this.newEmployeeId;
+			} else {
+				this.employee.EmployeeId = this.employeeCode;
+			}
+			
 			console.log(this.employee);
+			this.$refs.employeeId.focus();
 		},
-	},
-	validations: {
-		name: {
-			required,
-			nameMustBe,
-		},
-		dob: {
 
-		},
-		ccid: {
-			required,
-			numeric,
-		},
-		email :{
-			required, 
-			email,
-		},
-		phoneNum: {
-			required,
-			numeric,
-		},
-		taxNum: {
-			numeric,
-		},
-		salary: {
-			numeric,
-		}
+		
 	},
 	filters: {
-		moment: function(date) {
-			console.log(moment(date));
-            return moment(date).format("YYYY-MM-DD");
-        },
 		money: function(money) {
-            return !money ? '' : money.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
-	}
+			if (money) {
+				return !money ? '' : money.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+			}
+		},
+	},
 }
 </script>
