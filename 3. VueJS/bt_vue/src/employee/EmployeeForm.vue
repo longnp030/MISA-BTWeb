@@ -12,7 +12,7 @@
 					<div class="avatar"></div>
 					<div class="avt-rules">(Vui lòng chọn ảnh có định dạng .jpg, .jpeg, .png, .gif.)</div>
 				</div>
-				<div class="right"><form id="employee-form" method="POST">
+				<div class="right"><ValidationObserver ref="employeeForm"><form id="employee-form" method="POST">
 					<div class="form-a">
 						<div class="form-a-title">A. THÔNG TIN CHUNG</div><hr>
 						<div class="form-a-fields">
@@ -22,9 +22,12 @@
 								<input ref="employeeId" v-else v-model="employee.EmployeeCode" tabindex="1" type="text">
 							</div>
 
-							<div class="form-group" :class="{ 'form-group--error': nameError }">
-								<label class="form__label">Họ và tên<span class="required"> (<span class="asterisk"></span>)</span></label>
-								<input class="form__input" :value="employee.FullName" @input="nameOnInput($event)" tabindex="2" type="text"/>
+							<div class="form-group">
+								<label>Họ và tên<span class="required"> (<span class="asterisk"></span>)</span></label>
+								<ValidationProvider rules="required" name="Họ và tên" v-slot="{ errors }">
+									<input :class="{'error': errors.length > 0 ? true : false}" v-model="employee.FullName" tabindex="2" type="text"/>
+									<span class="error-msg">{{ errors[0] }}</span>
+								</ValidationProvider>
 							</div>
 
 							<div class="form-group" :class="{ 'form-group--error': dobError }">
@@ -37,13 +40,16 @@
 								<BaseDropdown
 									dropdownId="gender"
 									dropdownHint="Giới tính"
-									:employee="employee"
-									:dropdownInputVal="employee.Gender"/>
+									:dropdownInputVal="employee.Gender"
+									:employee="employee"/>
 							</div>
 							
-							<div class="form-group" :class="{ 'form-group--error': ccidError }">
-								<label class="form__label">Số CMTND/Căn cước<span class="required"> (<span class="asterisk"></span>)</span></label>
-								<input class="form__input" v-model="employee.IdentityNumber" tabindex="5"/>
+							<div class="form-group">
+								<label>Số CMTND/Căn cước<span class="required"> (<span class="asterisk"></span>)</span></label>
+								<ValidationProvider rules="required|numeric" name="Số CMTND/Căn cước" v-slot="{ errors }">
+									<input :class="{'error': errors.length > 0 ? true : false}" v-model="employee.IdentityNumber" tabindex="5"/>
+									<span class="error-msg">{{ errors[0] }}</span>
+								</ValidationProvider>
 							</div>
 	
 							<div class="form-group" :class="{ 'form-group--error': ccidDateError }">
@@ -58,14 +64,20 @@
 							
 							<div></div>
 								
-							<div class="form-group" :class="{ 'form-group--error': emailError }">
-								<label class="form__label">Email<span class="required"> (<span class="asterisk"></span>)</span></label>
-								<input class="form__input" :value="employee.Email" @input="emailOnInput($event)" tabindex="8" type="email"/>
+							<div class="form-group">
+								<label>Email<span class="required"> (<span class="asterisk"></span>)</span></label>
+								<ValidationProvider rules="required|email" name="Email" v-slot="{ errors }">
+									<input :class="{'error': errors.length > 0 ? true: false}" v-model="employee.Email" tabindex="8" type="email"/>
+									<span class="error-msg">{{ errors[0] }}</span>
+								</ValidationProvider>
 							</div>
 	
-							<div class="form-group" :class="{ 'form-group--error': phoneError }">
-								<label class="form__label">Số điện thoại<span class="required"> (<span class="asterisk"></span>)</span></label>
-								<input class="form__input" :value="employee.PhoneNumber" @input="phoneOnInput($event)" tabindex="9"/>
+							<div class="form-group">
+								<label>Số điện thoại<span class="required"> (<span class="asterisk"></span>)</span></label>
+								<ValidationProvider rules="required|numeric" name="Số điện thoại" v-slot="{ errors }">
+									<input :class="{'error': errors.length > 0 ? true: false }" v-model="employee.PhoneNumber" tabindex="9"/>
+									<span class="error-msg">{{ errors[0] }}</span>
+								</ValidationProvider>
 							</div>
 						</div>
 					</div>
@@ -78,7 +90,8 @@
 								<BaseDropdown
 									dropdownId="position"
 									dropdownHint="Vị trí"
-									:dropdownInputVal="employee.PositionId"/>
+									:dropdownInputVal="employee.PositionId"
+									:employee="employee"/>
 							</div>
 	
 							<div>
@@ -86,7 +99,8 @@
 								<BaseDropdown
 									dropdownId="department"
 									dropdownHint="Phòng ban"
-									:dropdownInputVal="employee.DepartmentId"/>
+									:dropdownInputVal="employee.DepartmentId"
+									:employee="employee"/>
 							</div>
 						
 							<div class="form-group" :class="{ 'form-group--error': taxError }">
@@ -110,11 +124,12 @@
 								<BaseDropdown
 									dropdownId="workstatus"
 									dropdownHint="Tình trạng công việc"
-									:dropdownInputVal="employee.WorkStatus"/>
+									:dropdownInputVal="employee.WorkStatus"
+									:employee="employee"/>
 							</div>
 						</div>
 					</div>
-				</form></div>
+				</form></ValidationObserver></div>
 			</div>
 	
 			<div class="foot">
@@ -138,7 +153,12 @@
 
 <script>
 import axios from 'axios';
-// import bus from '../js/eventBus';
+
+// extend('fullname', {
+// 	validate(value, {
+// 		return /^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+\s{1})+[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+$/.test(value);
+// 	})
+// })
 
 import BaseButton from '../base/BaseButton.vue';
 import BaseDropdown from '../base/BaseDropdown.vue';
@@ -188,6 +208,8 @@ export default {
 		 */
 		btnCancelOnClick() {
 			console.log("cancel on click.");
+			this.employee = {};
+			this.$refs.employeeForm.reset();
 			this.$emit('btnAddOnClick', true, false);
 		},
 
@@ -196,39 +218,47 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		btnSaveOnClick() {
-			var self = this;
-			if (this.formMode == 0) {
-				Object.keys(this.employee).forEach(key => {
-					console.log("key: ", key, " val: ", this.employee[key]);
-				});
-				axios.post(`https://localhost:5001/api/Employees/`, 
-							this.employee)
-					.then((res) => {
-						self.$toast.success("Thêm thành công");
-						console.log(res);
-					})
-					.catch((res) => {
-						self.$toast.error("Thêm thất bại");
-						console.log(res.message);
+			this.$refs.employeeForm.validate().then((success) => {
+				if (!success) {
+					return;
+				}
+
+				var self = this;
+				if (this.formMode == 0) {
+					this.employee.CreatedDate = new Date();
+					Object.keys(this.employee).forEach(key => {
+						console.log("key: ", key, " val: ", this.employee[key]);
 					});
-				this.$emit("btnAddOnClick", true, false);
-				this.$emit("reload");
-			} else {
-				Object.keys(this.employee).forEach(key => {
-					console.log("key: ", key, " val: ", this.employee[key]);
-				});
-				axios.put(`https://localhost:5001/api/Employees/${this.employeeId}/`, this.employee)
-					.then((res) => {
-						self.$toast.success("Sửa thành công");
-						console.log(res);
-					})
-					.catch((res) => {
-						self.$toast.error("Sửa thất bại");
-						console.log(res);
+					axios.post(`https://localhost:5001/api/v1/Employees/`, 
+								this.employee)
+						.then((res) => {
+							self.$toast.success("Thêm thành công");
+							console.log(res);
+						})
+						.catch((res) => {
+							self.$toast.error("Thêm thất bại");
+							console.log(res.message);
+						});
+					this.$emit("btnAddOnClick", true, false);
+					this.$emit("reload");
+				} else {
+					this.employee.ModifiedDate = new Date();
+					Object.keys(this.employee).forEach(key => {
+						console.log("key: ", key, " val: ", this.employee[key]);
 					});
-				this.$emit("btnAddOnClick", true, false);
-				this.$emit("reload");
-			}
+					axios.put(`https://localhost:5001/api/v1/Employees/${this.employeeId}/`, this.employee)
+						.then((res) => {
+							self.$toast.success("Sửa thành công");
+							console.log(res);
+						})
+						.catch((res) => {
+							self.$toast.error("Sửa thất bại");
+							console.log(res);
+						});
+					this.$emit("btnAddOnClick", true, false);
+					this.$emit("reload");
+				}
+			});
 		},
 
 		/**
@@ -248,20 +278,6 @@ export default {
 
 			// Hien thi tien da duoc them dau cham len form
 			event.target.value = event.target.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-		},
-
-		/**
-		 * Validate nhap ho va ten
-		 * Author: NPLONG (07/08/2021)
-		 */
-		nameOnInput(event) {
-			// Check neu ten ma khong phai dinh dang o duoi thi bao error
-			if (!/^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+\s{1})+[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+$/.test(event.target.value)) {
-				this.nameError = true;
-			} else {
-				this.nameError = false;
-				this.employee.FullName = event.target.value;
-			}
 		},
 
 		/**
@@ -302,9 +318,12 @@ export default {
 			var self = this;
 			this.employeeId = this.employeeId.replace('!', '');
 			if (this.formMode == 0) {
-				this.employee = {}
+				this.$nextTick(() => {
+					this.employee = {};
+				})
+				
 			} else {
-				axios.get(`https://localhost:5001/api/Employees/${this.employeeId}`)
+				axios.get(`https://localhost:5001/api/v1/Employees/${this.employeeId}`)
 					.then((res) => {
 						self.employee = res.data;
 					})
@@ -324,6 +343,7 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		formMode: function() {
+			this.employee = {};
 			console.log("emplForm, line 314, formMode watch: ran into!. formMode: ", this.formMode);
 			if (this.formMode == 0) {
 				this.employee = {};

@@ -41,11 +41,13 @@
 
             <BaseDropdown
                 dropdownId="departmentFilter"
-                dropdownHint="Tất cả phòng ban"/>
+                dropdownHint="Tất cả phòng ban"
+                @reload="btnReloadOnClick"/>
 
             <BaseDropdown
                 dropdownId="positionFilter"
-                dropdownHint="Tất cả vị trí"/>
+                dropdownHint="Tất cả vị trí"
+                @reload="btnReloadOnClick"/>
         </div>
         
         <div class="right">
@@ -101,12 +103,6 @@
         </table>
     </div>
 
-    <!-- <div class="paging">
-        <span class="left">Paging {{ today }}</span>
-        <input class="center" v-model="salary" @keyup="handleMoneyInputChange">
-        <input class="center" v-model="today" type="date">
-        <span class="right"> Money {{ salary }}</span>
-    </div> -->
     <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick" @reload="btnReloadOnClick"/>
 </div>
 </template>
@@ -114,10 +110,6 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
-
-import Vue from 'vue'
-import AxiosPlugin from 'vue-axios-cors';
-Vue.use(AxiosPlugin)
 
 import EmployeeForm from '../employee/EmployeeForm.vue'
 import BaseButton from '../base/BaseButton.vue'
@@ -132,14 +124,17 @@ export default {
         BaseDropdown,
         BaseModal,
     },
-    mounted() {
+    created() {
         var self = this;
-        axios.get("https://localhost:5001/api/Employees/")
+        console.log(this.employees);
+        axios.get("https://localhost:5001/api/v1/Employees/")
             .then((res) => {
-                self.employees = res.data.slice(1, 20);
+                self.employees = res.data;//.slice(1, 20);
+                this.$toast.success("Tải danh sách nhân viên thành công");
             })
-            .catch((res) => {
-                console.log(res);
+            .catch((err) => {
+                console.log(err);
+                this.$toast.error("Lấy danh sách nhân viên thất bại");
             });
     },
     data() {
@@ -157,8 +152,6 @@ export default {
             salary: 412312,
         }
     },
-    props: {
-    },
     methods: {
         /**
          * Thuc hien show form nhan vien khi nhan nut Them nhan vien
@@ -169,7 +162,7 @@ export default {
             this.formMode = 0;
 
             if (getNewEmplCode) {
-                axios.get("https://localhost:5001/api/Employees/NewEmployeeCode/")
+                axios.get("https://localhost:5001/api/v1/Employees/NewEmployeeCode/")
                     .then((res) => {
                         this.newEmployeeId = res.data;
                     })
@@ -180,16 +173,35 @@ export default {
             }
         },
 
-        btnReloadOnClick() {
+        /**
+         * Hàm reload ( gán lại dữ liệu danh sách nhân viên )
+         * Nếu tham số bao gồm truy vấn thì lấy api filter
+         * Author: NPLONG (06/08/2021)
+         */
+        btnReloadOnClick(filterString) {
+            //debugger; // eslint-disable-line
             console.log("Reloading..");
+
             var self = this;
-            axios.get("https://localhost:5001/api/Employees/")
-                .then((res) => {
-                    self.employees = res.data;
-                })
-                .catch((res) => {
-                    console.log(res);
-                });
+            if (!filterString) {
+                axios.get("https://localhost:5001/api/v1/Employees/")
+                    .then((res) => {
+                        self.employees = res.data;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.$toast.success("Tải lại danh sách nhân viên thất bại");
+                    });
+            } else { // filterString = "Filter?positionId=this.dropdownInputValue"
+                axios.get("https://localhost:5001/api/v1/Employees/" + filterString)
+                    .then((res) => {
+                        self.employees = res.data;
+                    })
+                    .catch((res) => {
+                        console.log(res);
+                    });
+            }
+            
             console.log("Reloaded!");
         },
         
@@ -307,18 +319,30 @@ export default {
             }
         },
 
-        btnYesOnClick: function(isHidden) {
+        btnYesOnClick: function(isHidden, del) {
+            console.log(isHidden, del);
             this.isHidden = isHidden;
-            this.selectedEmpls = [...this.selectedEmpls];
-            console.log(this.selectedEmpls);
-            for (let i = 0; i < this.selectedEmpls.length; i++) {
-                console.log(this.selectedEmpls[i].EmployeeId);
+            if (del) {
+                this.selectedEmpls = [...this.selectedEmpls];
+                console.log(this.selectedEmpls);
+                for (let i = 0; i < this.selectedEmpls.length; i++) {
+                    console.log(this.selectedEmpls[i].EmployeeId);
+                    axios.delete(`https://localhost:5001/api/v1/Employees/${ this.selectedEmpls[i].EmployeeId }`)
+                        .then(() => {
+                            this.$toast.success(`Xóa nhân viên ${ this.selectedEmpls[i].EmployeeCode } thành công`);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            this.$toast.error(`Xóa nhân viên ${ this.selectedEmpls[i].EmployeeCode } thất bại`)
+                        });
+                }
+                
+                this.btnReloadOnClick();
+                // this.$nextTick(() => {
+                //     this.btnReloadOnClick();
+                // });
             }
         },
-
-        handleMoneyInputChange: function() {
-            this.salary = this.salary.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
     },
     filters: {
         money: function(money) {

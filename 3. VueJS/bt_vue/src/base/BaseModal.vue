@@ -55,7 +55,7 @@ export default {
             default: true,
         },
         objs: {
-            type: Object,
+            type: Array,
         },
         mini: {
             type: Boolean,
@@ -72,11 +72,11 @@ export default {
     },
     methods: {
         btnYesOnClick: function() {
-            this.$emit('btnYesOnClick');
+            this.$emit('btnYesOnClick', true, true);
         },
         btnNoOnClick: function() {
             console.log("no on click.");
-            this.$emit('btnYesOnClick', true);
+            this.$emit('btnYesOnClick', true, false);
         }
     },
 }

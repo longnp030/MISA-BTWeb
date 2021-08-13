@@ -15,7 +15,7 @@ export default {
 			type: String,
 		},
 		buttonClass: {
-			type: String,
+			type: [String, Object],
 		},
 		buttonId: {
 			type: String,

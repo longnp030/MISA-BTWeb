@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 
 Vue.config.productionTip = false;
-// Vue.config.silent = true
+Vue.config.silent = true
 
 import moment from 'moment';
 Vue.prototype.moment = moment;
@@ -20,9 +20,23 @@ import "vue-toastification/dist/index.css";
 const options = {
     // You can set your default options here
     position: 'bottom-right',
-
+    transition: "Vue-Toastification__bounce",
+    maxToasts: 10,
+    timeout: 5000,
 };
 Vue.use(Toast, options);
+
+import { ValidationObserver, ValidationProvider, extend } from 'vee-validate';
+import * as rules from 'vee-validate/dist/rules';
+import { messages } from 'vee-validate/dist/locale/vi.json';
+Object.keys(rules).forEach(rule => {
+    extend(rule, {
+        ...rules[rule],
+        message: messages[rule],
+    });
+});
+Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('ValidationObserver', ValidationObserver);
 
 new Vue({
   render: h => h(App),
