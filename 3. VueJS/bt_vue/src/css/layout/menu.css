@@ -1,0 +1,53 @@
+.menu {
+    width: 226px;
+    height: calc(100vh - 49px);
+    border-right: 1px solid #bbbbbb;
+    /* menu real width: 227 */
+}
+
+.menu .menu-item {
+    height: 44px;
+    width: calc(100% - 16px); /* minus padding left = 16 */
+    padding-left: 16px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.menu .menu-item:active {
+    background-color: #019160;
+    color: #ffffff;
+    font-family: GoogleSans-Medium;
+    font-size: 13px;
+}
+
+.menu .menu-item:hover {
+    background-color: #e5e5e5;
+    color: #000000;
+    font-family: GoogleSans-Regular;
+}
+
+.menu .menu-item .menu-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.menu .menu-item .menu-icon-dashboard {
+    background-image: url("../../assets/icon/dashboard.png");
+}
+
+.menu .menu-item .menu-icon-report {
+    background-image: url("../../assets/icon/report.png");
+}
+
+.menu .menu-item .menu-icon-employee {
+    background-image: url("../../assets/icon/dic-employee.png");
+}
+
+.menu .menu-item .menu-icon-setting {
+    background-image: url("../../assets/icon/setting.png");
+}

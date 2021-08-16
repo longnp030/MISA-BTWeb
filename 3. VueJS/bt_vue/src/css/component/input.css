@@ -1,0 +1,95 @@
+input {
+    height: 40px;
+    width: 100%;
+    padding: 0 16px;
+
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    box-sizing: border-box;
+    outline: none;
+
+    font-family: GoogleSans-Medium;
+    font-size: 13px;
+}
+
+input.invalid, input.invalid:focus {
+    border-color: #ff4747;
+    /* animation: shake 0.5s;
+    animation-iteration-count:infinite; */
+}
+/* @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+} */
+
+input:hover, input:focus {
+    border-color: #019160;
+}
+
+input::placeholder {
+    color: #bbbbbb;
+    font-size: 11px;
+    font-family: GoogleSans-Regular;
+}
+
+/* icon with input */
+.icon-input {
+    background-image: url('../../assets/icon/search.png');
+    background-repeat: no-repeat;
+    background-position: 16px center;
+    padding-left: 40px;
+}
+
+/* checkbox */
+.checkbox {
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.checkbox input { /* reset default checkbox */
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark { /* make a layer as new checkbox */
+    position: absolute;
+    margin-top: -10px;
+    height: 19px;
+    width: 19px;
+    background-color: #ffffff;
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+}
+
+.checkbox .checkmark .visible-icon { /* the white checkmark */
+    position: relative;
+    padding: 4px;
+    top: -1px;
+    left: -1px;
+    
+    color: white;
+    background-color: #019160;
+    border-color: #019160;
+    border-radius: 4px;
+}
+
+.checkbox .checkmark .visible-icon.hidden { /* Display? the white checkmark */
+    display: none;
+}
+

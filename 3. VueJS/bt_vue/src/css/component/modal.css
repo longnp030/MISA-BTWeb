@@ -1,0 +1,299 @@
+/* ********GENERAL MODAL******** */
+.modal-wrapper {
+    position: fixed;
+    z-index: 3;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #454545CC;
+    /* overflow-y: scroll; /* show full modal, scroll all page */
+}
+
+.modal-wrapper.hidden {
+    display: none;
+}
+
+.modal-wrapper .modal {
+    background-color: #ffffff;
+    width: 50%;
+    /* width: calc(100% - 48px); minus two padding 24 */
+    height: calc(100vh - 48px); /* form show only in screen, no scroll */
+    /* height: fit-content; /* fit background to full form */
+    margin: 24px 24px 24px 24px;
+    border-radius: 4px;
+    margin: 24px auto;
+}
+
+.modal-wrapper .modal.mini {
+    max-width: 50%;
+    height: fit-content;
+    max-height: calc(100vh - 174px);
+}
+
+.modal-wrapper .modal.mini .head {
+    padding-bottom: 0;
+}
+
+.modal-wrapper .modal .head {
+    display: flex;
+    padding: 24px;
+}
+
+.modal-wrapper .modal .head .title {
+    font-family: GoogleSans-Bold;
+    font-size: 15px;
+    color: #000000;
+}
+
+.modal-wrapper .modal .head .close {
+    background-image: url("../../assets/icon/x.svg");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    padding: 8px 8px 8px 8px;
+    top: -24px;
+    right: -24px;
+    position: relative;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.modal-wrapper .modal .head .close:hover {
+    background-color: #e9ebee;
+}
+
+/* modal body */
+.modal-wrapper .modal .body {
+    display: flex;
+    height: calc(100% - 174px); /* max height for content inside body, minus footer height */
+    /* height: fit-content; */
+    padding:  0 24px 24px 24px;
+    font-family: GoogleSans-Regular;
+    font-size: 13px;
+    color: #000000;
+}
+
+.modal-wrapper .modal.mini .body {
+    display: grid;
+    grid-template-columns: min-content auto;
+    width: 90%;
+    max-height: calc(100vh - 268px);
+}
+
+.modal-wrapper .modal .body .icon {
+    /* background-color: aqua; */
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    font-size: 24px;
+    line-height: 40px;
+}
+
+.modal-wrapper .modal.danger .body .icon {
+    color: #f65454;
+}
+
+.modal-wrapper .modal .body .text {
+    margin-left: 10px;
+    line-height: 40px;
+}
+
+.modal-wrapper .modal.mini .body .obj-list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: calc(100vh - 296px);
+}
+.modal-wrapper .modal.mini .body .obj-list .obj-container {
+    font-size: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 12px 10px;
+}
+
+/* modal foot */
+.modal-wrapper .modal .foot {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    background-color: #e9ebee;
+    padding: 10px 0;
+    border-radius: 4px;
+}
+
+.modal-wrapper .modal .foot .btn {
+    margin-right: 24px; 
+}
+
+.modal-wrapper .modal .foot .btn-2 {
+    background-color: transparent;
+    border: 0;
+    padding: 0 24px;
+    margin-right: 16px;
+}
+
+.modal-wrapper .modal .foot .btn-2:hover {
+    background-color: #e5e5e5;
+}
+
+
+
+/* ********EMPLOYEE FORM******** */
+/* modal body */
+
+.modal-wrapper .modal .body .left {
+    width: 30%;
+    height: inherit; /* modal body height */
+    margin-right: 24px;
+    align-content: center;
+}
+
+.modal-wrapper .modal .body .left .avatar {
+    background-image: url('../../assets/img/default-avatar.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    width: 100%;
+    height: 0;
+    padding-bottom: 70%; /* height=0 to make this a square */
+    border-radius: 100%;
+
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto; /* align center */
+}
+
+.modal-wrapper .modal .body .left .avt-rules {
+    text-align: center;
+}
+
+.form-a hr, .form-b hr {
+    width: 105px;
+    height: 4px;
+    border: 0;
+    background-color: #01b075;
+    margin-top: 0;
+    margin-left: 0;
+}
+
+.modal-wrapper .modal .body .right {
+    height: 100%; /* modal body height */
+    width: 70%;
+    padding-right: 16px;
+    overflow-y: scroll; /* scroll form only */
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-title,
+.modal-wrapper .modal .body .right .form-b .form-b-title {
+    font-family: GoogleSans-Bold;
+    font-size: 16px;
+}
+
+.modal-wrapper .modal .body .right .form-a-fields {
+    margin-bottom: 24px;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields,
+.modal-wrapper .modal .body .right .form-b .form-b-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields input,
+.modal-wrapper .modal .body .right .form-b .form-b-fields input,
+.modal-wrapper .modal .body .right .form-a .form-a-fields .dropdown,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .dropdown {
+    margin-top: 4px;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields input.error,
+.modal-wrapper .modal .body .right .form-b .form-b-fields input.error {
+    border-color: red;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields input.error ~ .error-msg,
+.modal-wrapper .modal .body .right .form-b .form-b-fields input.error ~ .error-msg {
+    color: red;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields .mx-datepicker,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .mx-datepicker {
+    display: block;
+    width: 100%;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields .mx-datepicker .mx-icon-calendar,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .mx-datepicker .mx-icon-calendar {
+    right: 16px;
+    line-height: 40px;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields .mx-datepicker input,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .mx-datepicker input {
+    height: 40px;
+    width: 100%;
+    border-radius: 4px;
+    color: #000000;
+    font-family: GoogleSans-Medium;
+    font-size: 13px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields .mx-datepicker input:hover,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .mx-datepicker input:hover,
+.modal-wrapper .modal .body .right .form-a .form-a-fields .mx-datepicker input:focus,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .mx-datepicker input:focus {
+    border-color: #019160;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields .form-group--error input,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .form-group--error input {
+    border-color:red;
+}
+
+.modal-wrapper .modal .body .right .form-a .form-a-fields .required .asterisk:after,
+.modal-wrapper .modal .body .right .form-b .form-b-fields .required:after {
+    content: "*";
+    color: red;
+}
+
+/* .modal-wrapper .modal .body .right .form-b .form-b-fields .employee-salary::-webkit-input-placeholder {
+    text-align:right;
+    color: #000000;
+    font-family: GoogleSans-Italic;
+} */
+
+.modal-wrapper .modal .body .right .form-b .form-b-fields .salary-input {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.modal-wrapper .modal .body .right .form-b .form-b-fields .salary-input label{
+    width: 100%;
+}
+
+.modal-wrapper .modal .body .right .form-b .form-b-fields .salary-input input{
+    direction: rtl;
+    padding-right: 50px;
+}
+
+.modal-wrapper .modal .body .right .form-b .form-b-fields .currency {
+    position: relative;
+    top: -28px;
+    margin-left: auto;
+    margin-right: 10px;
+    font-family: GoogleSans-Italic;
+}
+
+/* CSS FORM ERROR ON VALIDATION */
+.modal-wrapper .modal .body .right .form-group.form-group--error input {
+    border-color: red;
+}

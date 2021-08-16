@@ -1,0 +1,96 @@
+.combobox {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* combobox input */
+.combobox .combobox-input {
+    min-width: 75px;
+    width: 100%;
+    outline: none;
+    padding: 0 40px 0 16px;
+}
+
+/* combobox button */
+.combobox .btn-2 {
+    position: absolute;
+    right: 0;
+    width: 40px;
+    height: 38px;
+    padding: 12px 12px;
+
+    background-color: transparent;
+    border: 0;
+    border-left: 1px solid #bbbbbb;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    z-index: 0;
+}
+
+.combobox .btn-clear {
+    right: 40px; /* caret width = 40 */
+    color: #bbbbbb;
+    border-left: 0;
+}
+
+.combobox .btn-2:hover {
+    padding: 0 12px;
+    border-left: 1px solid #bbbbbb;
+    background-color: transparent;
+
+    transform: rotate(-180deg);
+}
+
+.combobox .btn-clear:hover {
+    right: 40px;
+    color: #bbbbbb;
+    border-left: 0;
+}
+
+.combobox .btn-2:active {
+    padding: 0 12px;
+}
+
+.combobox .btn-2 .fa-angle-down {
+    z-index: 1;
+    color: #000000;
+}
+
+/* frame contains items */
+.combobox .combobox-data {
+    display: none;
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    padding: 4px 0;
+    border-radius: 4px;
+    box-shadow: 0 1px;
+}
+
+/* combobox items */
+.combobox .combobox-data .combobox-item {
+    height: 40px;
+    width: 100%;
+    line-height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.combobox .combobox-data .combobox-item:hover {
+    background-color: #e9ebee;
+}
+
+.combobox .combobox-data .combobox-item:active {
+    background-color: #019160;
+}
+
+/* combobox item icon - check */
+.combobox .combobox-data .combobox-item .combobox-item-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background-color: #019160;
+    margin: 0 10px;
+}

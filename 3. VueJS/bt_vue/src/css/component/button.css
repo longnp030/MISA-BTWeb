@@ -1,0 +1,104 @@
+.btn {
+    height: 40px;
+    padding: 0 24px;
+
+    background-color: #019160;
+    background-position: center;
+    border: 0px;
+    border-radius: 4px;
+
+    font-size: 13px;
+    font-family: GoogleSans-Regular;
+    color: #ffffff;
+    text-align: center;
+
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* align contents vertically */
+    justify-content: space-between; /* auto-align text to right if button has icon */
+}
+
+.btn-l {
+    padding: 0 24px;
+    width: 148px;
+}
+
+.btn:hover {
+    background-color: #2fbe8e;
+}
+
+.btn:active {
+    background-color: #01b075;
+}
+
+/* buttons contain icon */
+.btn .btn-icon {
+    /* background-color: #ffffff; */
+    margin-left: 0px; /* left -> icon = 16 */
+    margin-right: 8px; /* icon -> text = 8 */
+    width: 16px;
+    height: 16px;
+}
+.btn .btn-icon.hideIcon, .btn-2 .btn-icon.hideIcon {
+    display: none;
+}
+
+/* .btn .btn-text {
+    margin: 0 0 0 8px; icon -> text = 8; text -> right = 16
+    changed right from 16 to 0
+} */
+
+/* buttons contain dropdown */
+.btn .btn-caret {
+    background-color: #019160;
+    border-left: 1px solid #bbbbbbcc;
+    border-radius: 0 4px 4px 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.btn .btn-caret .caret {
+    background-color: #ffffff;
+    margin: 0 12px 0 12px; /* left -> icon = 16 */
+    width: 16px;
+    height: 16px;
+}
+
+.btn .btn-caret:hover {
+    background-color: #2fbe8e;
+}
+
+/* second button - white */
+.btn-2 {
+    height: 40px;
+    padding: 0 24px;
+
+    /* background-color: #f4f4f4; */
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+
+    font-size: 13px;
+    font-family: GoogleSans-Regular;
+    color: #000000;
+    text-align: center;
+
+    cursor: pointer;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.btn-2:hover {
+    padding: 0 24px;
+    background-color: #e9ebee;
+    border-color: #ebe9ee;
+}
+
+/* button danger - red */
+.btn-danger {
+    background-color: #f65454;
+}
+
+.btn-danger:hover {
+    background-color: #e07f7f;
+}

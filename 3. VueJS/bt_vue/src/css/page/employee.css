@@ -1,0 +1,83 @@
+#content {
+    position: absolute;
+    top: 49px;
+    left: 227px;
+    width: calc(100% - 259px);
+    padding: 16px 16px 0 16px;
+    height: calc(100vh - 65px);
+    /* background-color: #e9ebee; */
+}
+
+/* HEADER */
+.page-header {
+    display: flex;
+    align-items: center;
+}
+
+.page-header .title {
+    font-family: GoogleSans-Bold;
+    font-size: 20px;
+    color: #000000;
+    float: left;
+}
+
+.page-header .add-employee {
+    float: right;
+    position: absolute;
+    right: 186px;
+}
+
+.page-header .del-employee {
+    float: right;
+    position: absolute;
+    right: 16px;
+}
+
+
+/* FILTER */
+.filter {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    /* border-spacing: 16px; */
+    gap: 24px;
+    width: fit-content;
+}
+
+.filter .left {
+    display: flex;
+}
+
+.filter .left .search {
+    width: 272px;
+}
+
+.filter .left .search, .filter .left #department, .filter .left #departmentFilter {
+    margin-right: 16px;
+}
+
+.filter .right {
+    position: absolute;
+    align-items: center;
+    right: 16px;
+}
+
+.filter .right .reload {
+    background-image: url('../../assets/icon/refresh.png');
+    background-position: center;
+}
+
+/* TABLE */
+.table {
+    height: calc(100vh - 207px);
+    margin-top: 5px;
+    overflow-x: scroll;
+}
+
+/* screen height = 695
+   695 - 49 top- 16 content padding = 630 -> main content
+   630 - 25 title - (16+40) filter = 549 -> table + paging
+   549 - 56 paging = 493 -> table = 8 margin top + 485 main content 
+   49 + 16 + 25 + 16 + 40 + 8 + 56 = 210 
+   
+   table -> paging = 5 */

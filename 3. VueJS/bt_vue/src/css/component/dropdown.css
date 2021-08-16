@@ -1,0 +1,129 @@
+.dropdown {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: space-between; /* move caret to right side */
+    z-index: 2;
+
+    padding: 0 12px 0 16px;
+    height: 38px; /* plus two 1px borders = 40 */
+    min-width: 136px;
+
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    color: #000000;
+    background-color: #ffffff;
+    font-family: GoogleSans-Regular;
+}
+
+.dropdown:active, .dropdown:hover, .dropdown:focus  {
+    outline: none;
+    border-color: #019160;
+}
+
+/* dropdown hint (+?icon) */
+.dropdown .dropdown-icon {
+    display: none;
+    background-color: #019160;
+    width: 22px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+.dropdown .hint {
+    width: 100%;
+}
+
+.dropdown .hint.hint-hide {
+    display: none;
+}
+
+.dropdown .label {
+    display: none;
+}
+.dropdown .label.label-show {
+    display: block;
+}
+
+
+.dropdown .btn-clear {
+    border: 0;
+    height: 38px;
+    padding: 0 0 0 16px;
+    color: #bbbbbb;
+    background-color: #ffffff;
+    display: none;
+    margin-left: auto;
+}
+
+.dropdown .btn-clear.btn-clear-show {
+    display: block;
+}
+
+.dropdown .caret {
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+.dropdown:hover .caret { /* spin the caret with animation */
+    transition: transform 0.3s ease-in-out;
+    transform: rotate(180deg);
+}
+
+/* frame contains items */
+.dropdown:hover .dropdown-data {
+    display: block;
+}
+
+.dropdown .dropdown-data {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: -1px;
+    width: 100%;
+    padding: 4px 0;
+    z-index: 3;
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    box-shadow: 1px 1px 4px #bbbbbb; /* fade 1px right+bottom, fade to 4px and fade color #bbbbbb */
+}
+
+/* dropdown items */
+
+.dropdown .dropdown-data .dropdown-item {
+    height: 40px;
+    width: calc(100% - 16px); /* minus padding left = 16 */
+    line-height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding-left: 16px;
+}
+
+.dropdown .dropdown-data .dropdown-item:hover {
+    background-color: #bbbbbb;
+}
+
+.dropdown .dropdown-data .dropdown-item.active {
+    background-color: #019160;
+    color: #ffffff;
+}
+
+.dropdown .dropdown-data .dropdown-item.active ~ .dropdown-item-icon {
+    display: block;
+}
+
+.dropdown .dropdown-data .dropdown-item .dropdown-item-icon {
+    color: #ffffff;
+    margin: 0 10px 0 0;
+}
+
+.dropdown .dropdown-data .dropdown-item .dropdown-item-text {
+    height: 100%;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 16px;
+}
