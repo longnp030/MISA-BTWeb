@@ -24,6 +24,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		active: {
+			type: Boolean,
+			default: false,
+		},
 		iconClass: {
 			type: String,
 		},

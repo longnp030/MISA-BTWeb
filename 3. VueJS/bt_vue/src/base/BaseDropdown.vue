@@ -2,7 +2,7 @@
     <div class="dropdown" :id="dropdownId" >
         <div class="hint" :class="{'hint-hide': hintHide}">{{ dropdownHint }}</div>
         <div class="label" :class="{'label-show': labelShow}">{{ dropdownLabel }}</div>
-        <input :value="dropdownInputVal" @input="dropdownInputVal = $event" hiddenm>
+        <input :value="dropdownInputVal" hiddenn>
         <button type="button" class="btn-2 btn-clear" :class="{'btn-clear-show': btnClearShow}" @click="clear($event)"><font-awesome-icon icon="times-circle"/></button>
         <div class="caret"><font-awesome-icon icon="angle-down"/></div>
         <div class="dropdown-data" v-if="opened">
@@ -149,7 +149,7 @@ export default {
     },
     watch: {
         dropdownInputVal: function() {
-            //debugger; // eslint-disable-line
+            // debugger; // eslint-disable-line
             console.log("basedrop line 135, input val changed: ", this.dropdownInputVal);
 
             let items = this.$el.querySelectorAll('.dropdown-item');
@@ -236,10 +236,10 @@ export default {
                             .catch(() => {});
                         break;
                     case "positionFilter":
-                        this.$emit("reload", "Filter?positionId="+this.dropdownInputVal);
+                        this.$emit("pageChangeHandler", 1, this.dropdownInputVal, null);
                         break;
                     case "departmentFilter":
-                        this.$emit("reload", "Filter?departmentId="+this.dropdownInputVal);
+                        this.$emit("pageChangeHandler", 1, null, this.dropdownInputVal);
                         break;
                     default:
                         break;

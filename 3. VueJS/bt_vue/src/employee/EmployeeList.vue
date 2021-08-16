@@ -42,12 +42,12 @@
             <BaseDropdown
                 dropdownId="departmentFilter"
                 dropdownHint="Tất cả phòng ban"
-                @reload="btnReloadOnClick"/>
+                @pageChangeHandler="pageChangeHandler"/>
 
             <BaseDropdown
                 dropdownId="positionFilter"
                 dropdownHint="Tất cả vị trí"
-                @reload="btnReloadOnClick"/>
+                @pageChangeHandler="pageChangeHandler"/>
         </div>
         
         <div class="right">
@@ -88,20 +88,25 @@
                     ANS: Như câu hỏi bên trên, đặt ở thằng cha mà prevent thì 
                         chỉ nhận cha -->
             <td><label class="checkbox"><input type="checkbox" @click="checkRowOnClick($event, employee)"><span class="checkmark"><font-awesome-icon class="visible-icon hidden" icon="check"/></span></label></td>
-            <td :title="employee.EmployeeCode ">{{ employee.EmployeeCode   }}</td>
-            <td :title="employee.FullName     ">{{ employee.FullName       }}</td>
+            <td :title="employee.EmployeeCode  ">{{ employee.EmployeeCode   }}</td>
+            <td :title="employee.FullName      ">{{ employee.FullName       }}</td>
             <td :title="employee.GenderName    ">{{ employee.GenderName     }}</td>
             <td :title="employee.DateOfBirth   ">{{ employee.DateOfBirth? moment(employee.DateOfBirth).format('DD/MM/YYYY') : ''}}</td>
             <td :title="employee.PhoneNumber   ">{{ employee.PhoneNumber    }}</td>
             <td :title="employee.Email         ">{{ employee.Email          }}</td>
             <td :title="employee.PositionName  ">{{ employee.PositionName   }}</td>
             <td :title="employee.DepartmentName">{{ employee.DepartmentName }}</td>
-            <td :title="employee.Salary        ">{{ employee.Salary | money         }}</td>
+            <td :title="employee.Salary        ">{{ employee.Salary | money }}</td>
             <td :title="employee.WorkStatus    ">{{ employee.WorkStatus     }}</td>
             </tr>
             </tbody>
         </table>
     </div>
+
+    <SlidingPagination
+        :current="currentPage"
+        :total="totalPages"
+        @page-change="pageChangeHandler"></SlidingPagination>
 
     <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick" @reload="btnReloadOnClick"/>
 </div>
@@ -109,12 +114,13 @@
 
 <script>
 import axios from 'axios';
-import moment from 'moment';
 
 import EmployeeForm from '../employee/EmployeeForm.vue'
 import BaseButton from '../base/BaseButton.vue'
 import BaseDropdown from '../base/BaseDropdown.vue'
 import BaseModal from '../base/BaseModal.vue'
+// import BasePaging from '../base/BasePaging.vue'
+import SlidingPagination from 'vue-sliding-pagination'
 
 export default {
     name: "EmployeeList",
@@ -123,11 +129,29 @@ export default {
         BaseButton,
         BaseDropdown,
         BaseModal,
+        SlidingPagination
+    },
+    data() {
+        return {
+            employees: [],
+            isHidden: true, // alert modal
+            isHide: true, // form modal
+            employeeId: '',
+            newEmployeeId: '',
+            allEmplCount: 0,
+            currentPage: 1,
+            totalPages: 10,
+            formMode: 0,
+            departments: [],
+            positions: [],
+            selectedEmpls: [],
+        }
     },
     created() {
         var self = this;
         console.log(this.employees);
-        axios.get("https://localhost:5001/api/v1/Employees/")
+        axios.get("https://localhost:5001/api/v1/Employees/").then((res) => { self.allEmplCount = res.data.length; }).catch(() => {})
+        axios.get("https://localhost:5001/api/v1/Employees/Filter/")
             .then((res) => {
                 self.employees = res.data;//.slice(1, 20);
                 this.$toast.success("Tải danh sách nhân viên thành công");
@@ -137,22 +161,89 @@ export default {
                 this.$toast.error("Lấy danh sách nhân viên thất bại");
             });
     },
-    data() {
-        return {
-            employees: [],
-            isHidden: true, // alert modal
-            isHide: true, // form modal
-            employeeId: '',
-            newEmployeeId: '',
-            formMode: 0,
-            departments: [],
-            positions: [],
-            selectedEmpls: [],
-            today: moment('2017-02-01T00:00:00.000Z').format("YYYY-MM-DD"),//.diff(moment('Aug 04 2021')) < 0,
-            salary: 412312,
-        }
-    },
     methods: {
+        pageChangeHandler(selectedPage, positionId, departmentId) {
+            this.currentPage = selectedPage;
+            var existDepartmentId = document.querySelector('#departmentFilter input').value;
+            var existPositionId = document.querySelector('#positionFilter input').value;
+            var self = this;
+
+            if (positionId&&!departmentId) {
+                console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${positionId}&departmentId=${existDepartmentId}`)
+                axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${positionId}&departmentId=${existDepartmentId}`)
+                    .then((res) => {
+                        self.employees = res.data;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        this.$toast.error("Lấy danh sách nhân viên thất bại");
+                    });
+            } else if (!positionId&&departmentId) {
+                console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}&departmentId=${departmentId}`);
+                axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}&departmentId=${departmentId}`)
+                    .then((res) => {
+                        self.employees = res.data;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        this.$toast.error("Lấy danh sách nhân viên thất bại");
+                    });
+            } else if (positionId&&departmentId){
+                console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${positionId}&departmentId=${departmentId}`);
+                axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${positionId}&departmentId=${departmentId}`)
+                    .then((res) => {
+                        self.employees = res.data;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        this.$toast.error("Lấy danh sách nhân viên thất bại");
+                    });
+            } else {
+                if (existDepartmentId&&existPositionId) {
+                    console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}&departmentId=${existDepartmentId}`);
+                    axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}&departmentId=${existDepartmentId}`)
+                        .then((res) => {
+                            self.employees = res.data;
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            this.$toast.error("Lấy danh sách nhân viên thất bại");
+                        });
+                } else if (!existDepartmentId&&existPositionId) {
+                    console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}`);
+                    axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}`)
+                        .then((res) => {
+                            self.employees = res.data;
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            this.$toast.error("Lấy danh sách nhân viên thất bại");
+                        });
+                } else if (existDepartmentId&&!existPositionId) {
+                    console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&departmentId=${existDepartmentId}`);
+                    axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&departmentId=${existDepartmentId}`)
+                        .then((res) => {
+                            self.employees = res.data;
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            this.$toast.error("Lấy danh sách nhân viên thất bại");
+                        });
+                } else {
+                    console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}`);
+                    axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}`)
+                    .then((res) => {
+                        self.employees = res.data;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        this.$toast.error("Lấy danh sách nhân viên thất bại");
+                    });
+                }
+            }
+            
+        },
+
         /**
          * Thuc hien show form nhan vien khi nhan nut Them nhan vien
          * Author: NPLONG (30/07/2021)
@@ -178,29 +269,18 @@ export default {
          * Nếu tham số bao gồm truy vấn thì lấy api filter
          * Author: NPLONG (06/08/2021)
          */
-        btnReloadOnClick(filterString) {
+        btnReloadOnClick() {
             //debugger; // eslint-disable-line
             console.log("Reloading..");
-
             var self = this;
-            if (!filterString) {
-                axios.get("https://localhost:5001/api/v1/Employees/")
-                    .then((res) => {
-                        self.employees = res.data;
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        this.$toast.success("Tải lại danh sách nhân viên thất bại");
-                    });
-            } else { // filterString = "Filter?positionId=this.dropdownInputValue"
-                axios.get("https://localhost:5001/api/v1/Employees/" + filterString)
-                    .then((res) => {
-                        self.employees = res.data;
-                    })
-                    .catch((res) => {
-                        console.log(res);
-                    });
-            }
+            axios.get("https://localhost:5001/api/v1/Employees/")
+                .then((res) => {
+                    self.employees = res.data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.$toast.success("Tải lại danh sách nhân viên thất bại");
+                });
             
             console.log("Reloaded!");
         },
@@ -343,6 +423,8 @@ export default {
                 // });
             }
         },
+
+        
     },
     filters: {
         money: function(money) {
@@ -351,3 +433,7 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+@import "~vue-sliding-pagination/dist/style/vue-sliding-pagination.css";
+</style>
