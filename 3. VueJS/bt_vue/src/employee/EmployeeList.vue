@@ -33,20 +33,18 @@
 
     <div class="filter">
         <div class="left">
-            <input type="text" id="search" class="search icon-input" placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại">
+            <input type="text" id="search" ref="search" v-model="searchInput" class="search icon-input" placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại">
 
             <!--TODO: Lam the nao de call API 1 lan ma lay dc data cho tat ca dropdown
                 ANS: No way!! Call API to fetch dropdown data each time dropdown is clicked
                 UPDATE 09/08/2021: TERNARY OPERATOR while fetch api data!!! fetch right when created-->
-
+            <BaseDropdown
+                dropdownId="positionFilter"
+                dropdownHint="Tất cả chức vụ"
+                @pageChangeHandler="pageChangeHandler"/>
             <BaseDropdown
                 dropdownId="departmentFilter"
                 dropdownHint="Tất cả phòng ban"
-                @pageChangeHandler="pageChangeHandler"/>
-
-            <BaseDropdown
-                dropdownId="positionFilter"
-                dropdownHint="Tất cả vị trí"
                 @pageChangeHandler="pageChangeHandler"/>
         </div>
         
@@ -61,7 +59,7 @@
     <div class="table">
         <table cellspacing="0">
             <thead>
-                <tr>
+                <tr ref="th">
                     <th field="CheckMark"><label class="checkbox"><input type="checkbox" @click="checkAllOnClick($event)"><span class="checkmark"><font-awesome-icon class="visible-icon hidden" icon="check"/></span></label></th>
                     <th field="EmployeeCode"   title="Mã nhân viên">Mã nhân viên</th>
                     <th field="FullName"       title="Họ và tên">Họ và tên</th>
@@ -103,10 +101,11 @@
         </table>
     </div>
 
-    <SlidingPagination
-        :current="currentPage"
-        :total="totalPages"
-        @page-change="pageChangeHandler"></SlidingPagination>
+    <div class="paging">
+        <div class="left">Hiển thị <b>{{ emplStartCount }} - {{ emplStartCount + 9 }} / {{ allEmplCount }}</b> nhân viên</div>
+        <div class="center"><SlidingPagination :current="currentPage" :total="totalPages" @page-change="pageChangeHandler"></SlidingPagination></div>
+        <div class="right"><b>{{ thisPageEmplCount }}</b> nhân viên/trang</div>
+    </div>
 
     <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick" @reload="btnReloadOnClick"/>
 </div>
@@ -119,7 +118,6 @@ import EmployeeForm from '../employee/EmployeeForm.vue'
 import BaseButton from '../base/BaseButton.vue'
 import BaseDropdown from '../base/BaseDropdown.vue'
 import BaseModal from '../base/BaseModal.vue'
-// import BasePaging from '../base/BasePaging.vue'
 import SlidingPagination from 'vue-sliding-pagination'
 
 export default {
@@ -138,110 +136,29 @@ export default {
             isHide: true, // form modal
             employeeId: '',
             newEmployeeId: '',
+            searchInput: '',
             allEmplCount: 0,
+            thisPageEmplCount: 0,
             currentPage: 1,
             totalPages: 10,
+            emplStartCount: 1,
             formMode: 0,
-            departments: [],
-            positions: [],
             selectedEmpls: [],
         }
     },
-    created() {
+    mounted() {
         var self = this;
-        console.log(this.employees);
-        axios.get("https://localhost:5001/api/v1/Employees/").then((res) => { self.allEmplCount = res.data.length; }).catch(() => {})
-        axios.get("https://localhost:5001/api/v1/Employees/Filter/")
-            .then((res) => {
-                self.employees = res.data;//.slice(1, 20);
-                this.$toast.success("Tải danh sách nhân viên thành công");
-            })
-            .catch((err) => {
-                console.log(err);
-                this.$toast.error("Lấy danh sách nhân viên thất bại");
-            });
+        axios.get("https://localhost:5001/api/v1/Employees/").then((res) => { self.employees = res.data.slice(0, 9); self.allEmplCount = res.data.length; self.totalPages = ~~(self.allEmplCount / 9) + 1; self.thisPageEmplCount = 9; this.$toast.success("Tải danh sách nhân viên thành công"); }).catch((err) => { console.log(err); this.$toast.error("Lấy danh sách nhân viên thất bại"); });
     },
     methods: {
-        pageChangeHandler(selectedPage, positionId, departmentId) {
+        pageChangeHandler(selectedPage, searchTerm, positionId, departmentId) {
             this.currentPage = selectedPage;
-            var existDepartmentId = document.querySelector('#departmentFilter input').value;
-            var existPositionId = document.querySelector('#positionFilter input').value;
+            this.emplStartCount = (selectedPage - 1) * 10;
+            searchTerm = searchTerm ? searchTerm : this.$refs.search.value;
+            positionId = positionId ? positionId : (this.$el.querySelector('#positionFilter .active') ? this.$el.querySelector('#positionFilter .active').dataset.id : '');
+            departmentId = departmentId ? departmentId : (this.$el.querySelector('#departmentFilter .active') ? this.$el.querySelector('#departmentFilter .active').dataset.id : '')
             var self = this;
-
-            if (positionId&&!departmentId) {
-                console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${positionId}&departmentId=${existDepartmentId}`)
-                axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${positionId}&departmentId=${existDepartmentId}`)
-                    .then((res) => {
-                        self.employees = res.data;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        this.$toast.error("Lấy danh sách nhân viên thất bại");
-                    });
-            } else if (!positionId&&departmentId) {
-                console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}&departmentId=${departmentId}`);
-                axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}&departmentId=${departmentId}`)
-                    .then((res) => {
-                        self.employees = res.data;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        this.$toast.error("Lấy danh sách nhân viên thất bại");
-                    });
-            } else if (positionId&&departmentId){
-                console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${positionId}&departmentId=${departmentId}`);
-                axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${positionId}&departmentId=${departmentId}`)
-                    .then((res) => {
-                        self.employees = res.data;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        this.$toast.error("Lấy danh sách nhân viên thất bại");
-                    });
-            } else {
-                if (existDepartmentId&&existPositionId) {
-                    console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}&departmentId=${existDepartmentId}`);
-                    axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}&departmentId=${existDepartmentId}`)
-                        .then((res) => {
-                            self.employees = res.data;
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            this.$toast.error("Lấy danh sách nhân viên thất bại");
-                        });
-                } else if (!existDepartmentId&&existPositionId) {
-                    console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}`);
-                    axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&positionId=${existPositionId}`)
-                        .then((res) => {
-                            self.employees = res.data;
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            this.$toast.error("Lấy danh sách nhân viên thất bại");
-                        });
-                } else if (existDepartmentId&&!existPositionId) {
-                    console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&departmentId=${existDepartmentId}`);
-                    axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&departmentId=${existDepartmentId}`)
-                        .then((res) => {
-                            self.employees = res.data;
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            this.$toast.error("Lấy danh sách nhân viên thất bại");
-                        });
-                } else {
-                    console.log(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}`);
-                    axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}`)
-                    .then((res) => {
-                        self.employees = res.data;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        this.$toast.error("Lấy danh sách nhân viên thất bại");
-                    });
-                }
-            }
-            
+            axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&input=${searchTerm}&positionId=${positionId}&departmentId=${departmentId}`).then((res) => { self.employees = res.data; }).catch(() => {});
         },
 
         /**
@@ -270,18 +187,8 @@ export default {
          * Author: NPLONG (06/08/2021)
          */
         btnReloadOnClick() {
-            //debugger; // eslint-disable-line
             console.log("Reloading..");
-            var self = this;
-            axios.get("https://localhost:5001/api/v1/Employees/")
-                .then((res) => {
-                    self.employees = res.data;
-                })
-                .catch((error) => {
-                    console.log(error);
-                    this.$toast.success("Tải lại danh sách nhân viên thất bại");
-                });
-            
+            this.pageChangeHandler(1, '', '', '');
             console.log("Reloaded!");
         },
         
@@ -291,9 +198,9 @@ export default {
          */
         rowOnDblClick(emplId) {
             console.log("line 200 emplList: this.employeeId: ", this.employeeId, "this.newemployeeId:", this.newEmployeeId);
+            this.formMode = 1;
             this.employeeId = emplId + "!";
             this.isHide = false;
-            this.formMode = 1;
         },
 
         /**
@@ -344,7 +251,7 @@ export default {
          * Author: NPLONG (02/08/2021)
          */
         checkAllOnClick(event) {
-            let thisTh = event.currentTarget.parentNode.parentNode.parentNode;
+            let thisTh = this.$refs.th;
 
             let checked = false;
             if (thisTh.getAttribute("data-checked") === null) {
@@ -365,7 +272,7 @@ export default {
                 });
                 console.log(this.selectedEmpls);
 
-                let allTrs = document.querySelectorAll('tbody tr');
+                let allTrs = this.$el.querySelectorAll('tbody tr');
                 allTrs.forEach(tr => {
                     tr.classList.add("checked");
                     tr.setAttribute("data-checked", checked);
@@ -377,7 +284,7 @@ export default {
                 this.selectedEmpls = [];
                 console.log(this.selectedEmpls);
 
-                let allTrs = document.querySelectorAll('tbody tr');
+                let allTrs = this.$el.querySelectorAll('tbody tr');
                 allTrs.forEach(tr => {
                     tr.classList.remove("checked");
                     tr.setAttribute("data-checked", checked);
@@ -391,9 +298,8 @@ export default {
          * Author: NPLONG (30/07/2021)
          */
         btnDelOnClick() {
-            // let toDelEmpls = document.getElementsByClassName('checked');
             if (this.selectedEmpls.length === 0) {
-                this.$toast.warning("Bạn chưa chọn nhân viên nào")
+                this.$toast.warning("Bạn chưa chọn nhân viên nào");
             } else {
                 this.isHidden = false;
             }
@@ -406,25 +312,26 @@ export default {
                 this.selectedEmpls = [...this.selectedEmpls];
                 console.log(this.selectedEmpls);
                 for (let i = 0; i < this.selectedEmpls.length; i++) {
-                    console.log(this.selectedEmpls[i].EmployeeId);
                     axios.delete(`https://localhost:5001/api/v1/Employees/${ this.selectedEmpls[i].EmployeeId }`)
-                        .then(() => {
-                            this.$toast.success(`Xóa nhân viên ${ this.selectedEmpls[i].EmployeeCode } thành công`);
-                        })
+                        .then(() => {})
                         .catch((err) => {
                             console.log(err);
-                            this.$toast.error(`Xóa nhân viên ${ this.selectedEmpls[i].EmployeeCode } thất bại`)
+                            this.$toast.error(`Xóa nhân viên ${ this.selectedEmpls[i].EmployeeCode } thất bại`);
                         });
                 }
-                
-                this.btnReloadOnClick();
-                // this.$nextTick(() => {
-                //     this.btnReloadOnClick();
-                // });
+                this.$toast.success("Xóa các nhân viên thành công");
+                this.$nextTick(() => {
+                    this.btnReloadOnClick();
+                });
             }
         },
 
         
+    },
+    watch: {
+        searchInput: function() {
+            this.pageChangeHandler(1, this.searchInput, '', '');
+        }
     },
     filters: {
         money: function(money) {
@@ -435,5 +342,6 @@ export default {
 </script>
 
 <style scoped>
-@import "~vue-sliding-pagination/dist/style/vue-sliding-pagination.css";
+    @import "../css/component/vue-sliding-pagination.css";
+    @import "../css/component/paging.css"
 </style>

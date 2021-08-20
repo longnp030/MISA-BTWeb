@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 
 Vue.config.productionTip = false;
-Vue.config.silent = true
+// Vue.config.silent = true;
 
 import moment from 'moment';
 Vue.prototype.moment = moment;
@@ -37,6 +37,11 @@ Object.keys(rules).forEach(rule => {
 });
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
+
+extend('dob', {
+    getMessage: field => field + "không thể vượt quá ngày hôm nay",
+    validate: value => (value > new Date()),
+})
 
 new Vue({
   render: h => h(App),

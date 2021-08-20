@@ -55,7 +55,7 @@ export default {
             default: true,
         },
         objs: {
-            type: Array,
+            type: [Array, Set],
         },
         mini: {
             type: Boolean,

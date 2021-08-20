@@ -2,7 +2,7 @@
     <div class="dropdown" :id="dropdownId" >
         <div class="hint" :class="{'hint-hide': hintHide}">{{ dropdownHint }}</div>
         <div class="label" :class="{'label-show': labelShow}">{{ dropdownLabel }}</div>
-        <input :value="dropdownInputVal" hiddenn>
+        <input :value="dropdownInputVal" v-on:input="$emit('input', $event.target.value)" hidden>
         <button type="button" class="btn-2 btn-clear" :class="{'btn-clear-show': btnClearShow}" @click="clear($event)"><font-awesome-icon icon="times-circle"/></button>
         <div class="caret"><font-awesome-icon icon="angle-down"/></div>
         <div class="dropdown-data" v-if="opened">
@@ -27,9 +27,14 @@ export default {
             items: [],
             opened: false,
             dropdownLabel: '',
+            inputVal: '',
             hintHide: false,
             labelShow: false,
             btnClearShow: false,
+            posApi: "https://localhost:5001/api/v1/Positions/",
+            depApi: "https://localhost:5001/api/v1/Departments/",
+            genApi: "https://localhost:5001/api/v1/Genders/",
+            workApi: "https://localhost:5001/api/v1/WorkStatus/",
         }
     },
     props: {
@@ -43,7 +48,7 @@ export default {
             type: [String, Number],
         },
         employee: {
-            type: Object
+            type: Object,
         }
     },
     created() {
@@ -60,17 +65,17 @@ export default {
                 switch (this.dropdownId) {
                     case "department":
                     case "departmentFilter":
-                        apiUrl = "https://localhost:5001/api/v1/Departments/";
+                        apiUrl = this.depApi;
                         break;
                     case "position":
                     case "positionFilter":
-                        apiUrl = "https://localhost:5001/api/v1/Positions/";
+                        apiUrl = this.posApi;
                         break;
                     case "gender":
-                        apiUrl = "https://localhost:5001/api/v1/Genders/";
+                        apiUrl = this.genApi;
                         break;
                     case "workstatus":
-                        apiUrl = "https://localhost:5001/api/v1/WorkStatus/";
+                        apiUrl = this.workApi;
                         break;
                     default:
                         break;
@@ -80,18 +85,7 @@ export default {
                         self.items = res.data;
                         // console.log(self.items);
                     })
-                    .catch(() => {
-                        switch (apiUrl) {
-                            case "https://localhost:5001/api/v1/Departments/":
-                                this.$toast.error("Tải danh sách phòng ban thất bại");
-                                break;
-                            case "https://localhost:5001/api/v1/Positions/":
-                                this.$toast.error("Tải danh sách vị trí thất bại");
-                                break;
-                            default:
-                                break;
-                        }
-                    });
+                    .catch(() => {});
                 
                 // 2nd: Show dropdown
                 self.opened = !self.opened;
@@ -103,31 +97,17 @@ export default {
          * Author: NPLONG (31/07/2021)
          */
         change: function(event, item) {
-            // debugger; // eslint-disable-line
-            // Outer div change
-            // this.$nextTick(() => {
-            //     this.dropdownLabel = item.DepartmentName ? item.DepartmentName : item.PositionName ? item.PositionName : item.GenderName ? item.GenderName : item.WorkStatusName ? item.WorkStatusName : null;
-            //     this.dropdownInputVal = item.DepartmentId ? item.DepartmentId : item.PositionId ? item.PositionId : item.Gender ? item.Gender : item.WorkStatus ? item.WorkStatus : null;
-            //     this.hintHide = true;
-            //     this.labelShow = true;
-            //     this.btnClearShow = true;
-            // })
             this.dropdownLabel = item.DepartmentName ? item.DepartmentName : item.PositionName ? item.PositionName : item.GenderName ? item.GenderName : item.WorkStatusName ? item.WorkStatusName : null;
-            this.dropdownInputVal = item.DepartmentId ? item.DepartmentId : item.PositionId ? item.PositionId : item.Gender ? item.Gender : item.WorkStatus ? item.WorkStatus : null;
-            this.hintHide = true;
-            this.labelShow = true;
-            this.btnClearShow = true;
+            this.inputVal = item.DepartmentId ? item.DepartmentId : item.PositionId ? item.PositionId : item.Gender ? item.Gender : item.WorkStatus ? item.WorkStatus : null;
+            this.dropdownOver(true);
 
             // Items change
-            let actives = event.currentTarget.parentNode.querySelectorAll(".active");
-            if (actives !== null) {
-                // console.log(actives);
-                actives.forEach(element => {
-                    element.classList.remove("active");
-                });
+            let active = event.currentTarget.parentNode.querySelector(".active");
+            console.log(active);
+            if (active !== null) {
+                active.classList.remove("active");
             }
             let thisItem = event.currentTarget;
-            // console.log(thisItem);
             thisItem.classList.add("active");
         },
 
@@ -137,115 +117,115 @@ export default {
          */
         clear: function(event) {
             this.dropdownLabel = '';
-            this.dropdownInputVal = '';
-            this.labelShow = false;
-            this.hintHide = false;
-            this.btnClearShow = false;
+            this.inputVal = '';
+            this.dropdownOver(false);
 
             let thisItem = event.currentTarget.parentNode.querySelector('.active');
-            console.log(thisItem);
             thisItem.classList.remove("active");
+        },
+
+        dropdownOver: function(trueFalse) {
+            this.hintHide = trueFalse;
+            this.labelShow = trueFalse;
+            this.btnClearShow = trueFalse;
         }
     },
     watch: {
         dropdownInputVal: function() {
-            // debugger; // eslint-disable-line
-            console.log("basedrop line 135, input val changed: ", this.dropdownInputVal);
-
+            this.inputVal = this.dropdownInputVal;
+        },
+        inputVal: function() {
+            // console.log("basedrop line 135, input val changed: ", this.inputVal);
             let items = this.$el.querySelectorAll('.dropdown-item');
-            // console.log("type of val: ", typeof this.dropdownInputVal);
             items.forEach(item => {
-                // console.log(item.dataset.id);
-                // console.log("starting clear dropdown...");
                 item.classList.remove("active");
                 this.dropdownLabel = '';
-                this.labelShow = false;
-                this.hintHide = false;
-                this.btnClearShow = false;
-                // console.log("done clear dropdown...");
+                this.dropdownOver(false);
             });
 
-            if (this.dropdownInputVal) {
-                console.log("Triggered if dropdownInputValue: ", this.dropdownInputVal);
+            if (this.inputVal) {
+                // console.log("Triggered if dropdownInputValue: ", this.inputVal);
                 items.forEach(item => {
-                    // console.log(item.dataset.id);
-                    if (item.dataset.id === this.dropdownInputVal.toString()) {
+                    if (item.dataset.id === this.inputVal.toString()) {
                         item.classList.add("active");
-                        this.hintHide = true;
-                        this.labelShow = true;
-                        this.btnClearShow = true;
                         this.dropdownLabel = item.querySelector('.dropdown-item-text').textContent;
+                        this.dropdownOver(true);
+
+                        switch (this.dropdownId) {
+                            case "gender":
+                                axios.get(this.genApi)
+                                    .then((res) => {
+                                        res.data.forEach(gen => {
+                                            if (gen.Gender === parseInt(this.inputVal)) {
+                                                this.employee.Gender = gen.Gender;
+                                                this.employee.GenderName = gen.GenderName;
+                                                return;
+                                            }
+                                        });
+                                    })
+                                    .catch(() => {});
+                                break;
+                            case "position":
+                                axios.get(this.posApi)
+                                    .then((res) => {
+                                        res.data.forEach(pos => {
+                                            if (pos.PositionId === this.inputVal) {
+                                                this.employee.PositionId = pos.PositionId;
+                                                this.employee.PositionCode = pos.PositionCode;
+                                                this.employee.PositionName = pos.PositionName;
+                                                return;
+                                            }
+                                        });
+                                    })
+                                    .catch(() => {});
+                                break;
+                            case "department":
+                                axios.get(this.depApi)
+                                    .then((res) => {
+                                        res.data.forEach(dep => {
+                                            if (dep.DepartmentId === this.inputVal) {
+                                                this.employee.DepartmentId = dep.DepartmentId;
+                                                this.employee.DepartmentCode = dep.DepartmentCode;
+                                                this.employee.DepartmentName = dep.DepartmentName;
+                                                return;
+                                            }
+                                        });
+                                    })
+                                    .catch(() => {});
+                                break;
+                            case "workstatus":
+                                axios.get(this.workApi)
+                                    .then((res) => {
+                                        res.data.forEach(ws => {
+                                            if (ws.WorkStatus === parseInt(this.inputVal)) {
+                                                this.employee.WorkStatus = ws.WorkStatus;
+                                                this.employee.WorkStatusName = ws.WorkStatusName;
+                                                return;
+                                            }
+                                        });
+                                    })
+                                    .catch(() => {});
+                                break;
+                            default:
+                                break;
+                        }
                     } else {
                         item.classList.remove("active");
                     }
                 });
-                
-                switch (this.dropdownId) {
-                    case "gender":
-                        axios.get("https://localhost:5001/api/v1/Genders/")
-                            .then((res) => {
-                                res.data.forEach(gen => {
-                                    if (gen.Gender === parseInt(this.dropdownInputVal)) {
-                                        this.employee.Gender = gen.Gender;
-                                        this.employee.GenderName = gen.GenderName;
-                                        return;
-                                    }
-                                });
-                            })
-                            .catch(() => {});
-                        break;
-                    case "position":
-                        axios.get("https://localhost:5001/api/v1/Positions/")
-                            .then((res) => {
-                                res.data.forEach(pos => {
-                                    if (pos.PositionId === this.dropdownInputVal) {
-                                        this.employee.PositionId = pos.PositionId;
-                                        this.employee.PositionCode = pos.PositionCode;
-                                        this.employee.PositionName = pos.PositionName;
-                                        return;
-                                    }
-                                });
-                            })
-                            .catch(() => {});
-                        break;
-                    case "department":
-                        axios.get("https://localhost:5001/api/v1/Departments/")
-                            .then((res) => {
-                                res.data.forEach(dep => {
-                                    if (dep.DepartmentId === this.dropdownInputVal) {
-                                        this.employee.DepartmentId = dep.DepartmentId;
-                                        this.employee.DepartmentCode = dep.DepartmentCode;
-                                        this.employee.DepartmentName = dep.DepartmentName;
-                                        return;
-                                    }
-                                });
-                            })
-                            .catch(() => {});
-                        break;
-                    case "workstatus":
-                        axios.get("https://localhost:5001/api/v1/WorkStatus/")
-                            .then((res) => {
-                                res.data.forEach(ws => {
-                                    if (ws.WorkStatus === parseInt(this.dropdownInputVal)) {
-                                        this.employee.WorkStatus = ws.WorkStatus;
-                                        this.employee.WorkStatusName = ws.WorkStatusName;
-                                        return;
-                                    }
-                                });
-                            })
-                            .catch(() => {});
-                        break;
-                    case "positionFilter":
-                        this.$emit("pageChangeHandler", 1, this.dropdownInputVal, null);
-                        break;
-                    case "departmentFilter":
-                        this.$emit("pageChangeHandler", 1, null, this.dropdownInputVal);
-                        break;
-                    default:
-                        break;
-                }
             }
-        }
+
+            switch (this.dropdownId) {
+                case "positionFilter":
+                    this.$emit("pageChangeHandler", 1, '', this.inputVal, '');
+                    break;
+                case "departmentFilter":
+                    this.$emit("pageChangeHandler", 1, '', '', this.inputVal);
+                    break;
+                default:
+                    break;
+            }
+        },
     }
 }
 </script>

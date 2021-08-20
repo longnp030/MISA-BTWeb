@@ -52,7 +52,7 @@
     width: 272px;
 }
 
-.filter .left .search, .filter .left #department, .filter .left #departmentFilter {
+.filter .left .search, .filter .left #departmentFilter, .filter .left #positionFilter {
     margin-right: 16px;
 }
 

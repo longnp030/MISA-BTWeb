@@ -13,7 +13,7 @@ table th{
     z-index: 1;
 }
 
-table tr {
+.table tr {
     height: 48px;
 }
 

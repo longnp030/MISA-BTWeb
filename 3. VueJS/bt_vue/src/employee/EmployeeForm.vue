@@ -30,9 +30,12 @@
 								</ValidationProvider>
 							</div>
 
-							<div class="form-group" :class="{ 'form-group--error': dobError }">
+							<div class="form-group">
 								<label class="form__label">Ngày sinh</label>
-								<datepicker v-model="employee.DateOfBirth" :format="'DD/MM/YYYY'" :value-type="'YYYY-MM-DD'" tabindex="3" placeholder="DD/MM/YYYY"></datepicker>
+								<ValidationProvider rules="" name="Ngày sinh" v-slot="{ errors }">
+									<datepicker :class="{'error': errors.length > 0 ? true : false}" v-model="employee.DateOfBirth" :format="'DD/MM/YYYY'" :value-type="'YYYY-MM-DD'" :disabled-date="(date) => date >= new Date()" tabindex="3" placeholder="DD/MM/YYYY"></datepicker>
+									<span class="error-msg">{{ errors[0] }}</span>
+								</ValidationProvider>
 							</div>
 	
 							<div>
@@ -52,7 +55,7 @@
 								</ValidationProvider>
 							</div>
 	
-							<div class="form-group" :class="{ 'form-group--error': ccidDateError }">
+							<div class="form-group">
 								<label class="form__label">Ngày cấp</label><br>
 								<datepicker v-model="employee.IdentityDate" :format="'DD/MM/YYYY'" :value-type="'YYYY-MM-DD'" tabindex="6" placeholder="DD/MM/YYYY"></datepicker>
 							</div>
@@ -103,7 +106,7 @@
 									:employee="employee"/>
 							</div>
 						
-							<div class="form-group" :class="{ 'form-group--error': taxError }">
+							<div class="form-group">
 								<label class="form__label">Mã số thuế cá nhân</label>
 								<input class="form__input" v-model="employee.PersonalTaxCode" tabindex="12"/>
 							</div>								
@@ -154,12 +157,6 @@
 <script>
 import axios from 'axios';
 
-// extend('fullname', {
-// 	validate(value, {
-// 		return /^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+\s{1})+[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ]+$/.test(value);
-// 	})
-// })
-
 import BaseButton from '../base/BaseButton.vue';
 import BaseDropdown from '../base/BaseDropdown.vue';
 
@@ -190,14 +187,8 @@ export default {
 	data() {
 		return {
 			employee: {},
-			nameError: false,
-			dobError: false,
-			ccidError: false,
-			ccidDateError: false,
-			emailError: false,
-			phoneError: false,
-			taxError: false,
 			salaryError: false,
+			initialEmployeeId: '',
 		}
 	},
 	methods: {
@@ -229,12 +220,8 @@ export default {
 					Object.keys(this.employee).forEach(key => {
 						console.log("key: ", key, " val: ", this.employee[key]);
 					});
-					axios.post(`https://localhost:5001/api/v1/Employees/`, 
-								this.employee)
-						.then((res) => {
-							self.$toast.success("Thêm thành công");
-							console.log(res);
-						})
+					axios.post(`https://localhost:5001/api/v1/Employees/`, this.employee)
+						.then(() => { self.$toast.success("Thêm thành công"); })
 						.catch((res) => {
 							self.$toast.error("Thêm thất bại");
 							console.log(res.message);
@@ -246,7 +233,7 @@ export default {
 					Object.keys(this.employee).forEach(key => {
 						console.log("key: ", key, " val: ", this.employee[key]);
 					});
-					axios.put(`https://localhost:5001/api/v1/Employees/${this.employeeId}/`, this.employee)
+					axios.put(`https://localhost:5001/api/v1/Employees/${this.initialEmployeeId}/`, this.employee)
 						.then((res) => {
 							self.$toast.success("Sửa thành công");
 							console.log(res);
@@ -267,7 +254,6 @@ export default {
 		 */
 		salaryOnInput(event) {
 			event.target.value = event.target.value.replaceAll('.', '');
-
 			// Check neu tien ma chua ki tu khong phai chu so thi bao error
 			if (!/^\d*$/.test(event.target.value)) {
 				this.salaryError = true;
@@ -275,40 +261,28 @@ export default {
 				this.salaryError = false;
 				this.employee.Salary = event.target.value;
 			}
-
 			// Hien thi tien da duoc them dau cham len form
 			event.target.value = event.target.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 		},
 
-		/**
-		 * Validate email
-		 * Author: NPLONG (07/08/2021)
-		 */
-		emailOnInput(event) {
-			// Check neu ten ma khong phai dinh dang o duoi thi bao error
-			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.target.value)) {
-				this.emailError = true;
-			} else {
-				this.emailError = false;
-				this.employee.Email = event.target.value;
-			}
-		},
-
-		/**
-		 * Validate so dien thoai
-		 * Author: NPLONG (07/08/2021)
-		 */
-		phoneOnInput(event) {
-			// Check neu so dien thoai ma chua ki tu khong phai chu so thi bao error
-			if (!/^0\d{9,10}$/.test(event.target.value)) {
-				this.phoneError = true;
-			} else {
-				this.phoneError = false;
-				this.employee.PhoneNumber = event.target.value;
-			}
-		},
 	},
 	watch: {
+		/**
+		 * Khi click button khac nhau thi thay doi form mode, khi form mode = 0 thi khoi tao empl rong, ~ them moi
+		 * Author: NPLONG (30/07/2021)
+		 */
+		formMode: function() {
+			console.log("emplForm, line 304, formMode watch: ran into!. formMode: ", this.formMode);
+			if (this.formMode == 0) {
+				this.employee = {};
+				this.employee.Gender = null;
+				this.employee.PositionId = null;
+				this.employee.DepartmentId = null;
+				this.employee.WorkStatus = null;
+			}
+			console.log("emplForm line 312, empl after formMode change: ", this.employee);
+		},
+
 		/**
 		 * Moi khi empl ID thay doi, gan employee moi cho form
 		 * Author: NPLONG (30/07/2021)
@@ -316,14 +290,13 @@ export default {
 		employeeId: function() {
 			console.log("emplForm watch emplId: ran into!, emplId: ", this.employeeId);
 			var self = this;
-			this.employeeId = this.employeeId.replace('!', '');
+			this.initialEmployeeId = this.employeeId.replace('!', '');
 			if (this.formMode == 0) {
 				this.$nextTick(() => {
 					this.employee = {};
-				})
-				
+				});
 			} else {
-				axios.get(`https://localhost:5001/api/v1/Employees/${this.employeeId}`)
+				axios.get(`https://localhost:5001/api/v1/Employees/${this.initialEmployeeId}`)
 					.then((res) => {
 						self.employee = res.data;
 					})
@@ -335,24 +308,7 @@ export default {
 			this.$nextTick(() => {
 				this.$refs.employeeId.focus();
 			})
-			console.log("emplForm line 303: ", this);
-		},
-
-		/**
-		 * Khi click button khac nhau thi thay doi form mode, khi form mode = 0 thi khoi tao empl rong, ~ them moi
-		 * Author: NPLONG (30/07/2021)
-		 */
-		formMode: function() {
-			this.employee = {};
-			console.log("emplForm, line 314, formMode watch: ran into!. formMode: ", this.formMode);
-			if (this.formMode == 0) {
-				this.employee = {};
-				this.employee.Gender = null;
-				this.employee.PositionId = null;
-				this.employee.DepartmentId = null;
-				this.employee.WorkStatus = null;
-			}
-			console.log("emplForm line 322, empl after formMode change: ", this.employee);
+			console.log("emplForm line 295: ", this);
 		},
 
 		/**
@@ -360,8 +316,8 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		newEmployeeId: function() {
-			console.log("line 330 emplform, prop: newEmplId: ", this.newEmployeeId);
-			console.log("line 331 emplform, data: empl: ", this.employee);
+			console.log("line 320 emplform, prop: newEmplId: ", this.newEmployeeId);
+			console.log("line 321 emplform, data: empl: ", this.employee);
 			if (this.newEmployeeId) {
 				this.employee.EmployeeCode = this.newEmployeeId;
 			} else {
@@ -371,8 +327,6 @@ export default {
 			console.log(this.employee);
 			this.$refs.employeeId.focus();
 		},
-
-		
 	},
 	filters: {
 		money: function(money) {
