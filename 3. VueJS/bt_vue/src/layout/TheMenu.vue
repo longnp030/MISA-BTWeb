@@ -17,7 +17,7 @@
 
         <div class="menu-item">
             <div class="menu-icon menu-icon-employee"></div>
-            <div class="menu-item-text">Danh mục nhân viên</div>
+            <div class="menu-item-text"><router-link to="/employee">Danh mục nhân viên</router-link></div>
         </div>
 
         <div class="menu-item">

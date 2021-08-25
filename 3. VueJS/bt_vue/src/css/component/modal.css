@@ -26,7 +26,7 @@
 }
 
 .modal-wrapper .modal.mini {
-    max-width: 50%;
+    width: 36%;
     height: fit-content;
     max-height: calc(100vh - 174px);
 }

@@ -7,13 +7,7 @@
             </div>
             <div class="body">
                 <div class="icon"><font-awesome-icon icon="exclamation-triangle"/></div>
-                <div class="text">{{ textContent }}</div>
-                <div></div>
-                <div class="obj-list">
-                    <div class="obj-container" v-for="obj in objs" :key="obj.EmployeeId">
-                        <div>{{ obj.EmployeeCode }}</div>
-                        <div>{{ obj.FullName }}</div>
-                    </div>
+                <div class="text">Bạn có chắc chắn muốn xóa <span v-if="objs.length > 1">các </span> nhân viên có mã <span class="obj-container" v-for="obj in objs" :key="obj.EmployeeId"><span><b>{{ obj.EmployeeCode }}</b><span v-if="obj !== objs[objs.length - 1]">, </span></span></span> hay không?
                 </div>
             </div>
             <div class="foot">

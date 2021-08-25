@@ -41,18 +41,22 @@
             <BaseDropdown
                 dropdownId="positionFilter"
                 dropdownHint="Tất cả chức vụ"
-                @pageChangeHandler="pageChangeHandler"/>
+                apiUrl="https://localhost:5001/api/v1/Positions/"
+                @pageChangeHandler="pageChangeHandler"
+                @assign="assignFilterDrd"/>
             <BaseDropdown
                 dropdownId="departmentFilter"
                 dropdownHint="Tất cả phòng ban"
-                @pageChangeHandler="pageChangeHandler"/>
+                apiUrl="https://localhost:5001/api/v1/Departments/"
+                @pageChangeHandler="pageChangeHandler"
+                @assign="assignFilterDrd"/>
         </div>
         
         <div class="right">
             <BaseButton
                 buttonClass="btn-2 reload"
                 :hideIcon="true"
-                v-on:btnOnClick="btnReloadOnClick"/>
+                v-on:btnOnClick="pageChangeHandler(1, '', '', '')"/>
         </div>
     </div>
 
@@ -89,7 +93,7 @@
             <td :title="employee.EmployeeCode  ">{{ employee.EmployeeCode   }}</td>
             <td :title="employee.FullName      ">{{ employee.FullName       }}</td>
             <td :title="employee.GenderName    ">{{ employee.GenderName     }}</td>
-            <td :title="employee.DateOfBirth   ">{{ employee.DateOfBirth? moment(employee.DateOfBirth).format('DD/MM/YYYY') : ''}}</td>
+            <td :title="employee.DateOfBirth   ">{{ employee.DateOfBirth ? moment(employee.DateOfBirth).format('DD/MM/YYYY') : ''}}</td>
             <td :title="employee.PhoneNumber   ">{{ employee.PhoneNumber    }}</td>
             <td :title="employee.Email         ">{{ employee.Email          }}</td>
             <td :title="employee.PositionName  ">{{ employee.PositionName   }}</td>
@@ -102,12 +106,12 @@
     </div>
 
     <div class="paging">
-        <div class="left">Hiển thị <b>{{ emplStartCount }} - {{ emplStartCount + 9 }} / {{ allEmplCount }}</b> nhân viên</div>
-        <div class="center"><SlidingPagination :current="currentPage" :total="totalPages" @page-change="pageChangeHandler"></SlidingPagination></div>
-        <div class="right"><b>{{ thisPageEmplCount }}</b> nhân viên/trang</div>
+        <div class="left">Hiển thị <b>{{ currStart }} - {{ currEnd }} / {{ totalCount }}</b> nhân viên</div>
+        <div class="center"><SlidingPagination :current="pageAt" :total="totalPage" @page-change="pageChangeHandler"></SlidingPagination></div>
+        <div class="right"><b>{{ currCount }}</b> nhân viên/trang</div>
     </div>
 
-    <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick" @reload="btnReloadOnClick"/>
+    <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick" @reload="pageChangeHandler"/>
 </div>
 </template>
 
@@ -137,28 +141,35 @@ export default {
             employeeId: '',
             newEmployeeId: '',
             searchInput: '',
-            allEmplCount: 0,
-            thisPageEmplCount: 0,
-            currentPage: 1,
-            totalPages: 10,
-            emplStartCount: 1,
+            pageAt: 1,
+            totalCount: 0,
+            currCount: 0,
+            totalPage: 0,
+            currStart: 0,
+            currEnd: 0,
             formMode: 0,
             selectedEmpls: [],
         }
     },
     mounted() {
-        var self = this;
-        axios.get("https://localhost:5001/api/v1/Employees/").then((res) => { self.employees = res.data.slice(0, 9); self.allEmplCount = res.data.length; self.totalPages = ~~(self.allEmplCount / 9) + 1; self.thisPageEmplCount = 9; this.$toast.success("Tải danh sách nhân viên thành công"); }).catch((err) => { console.log(err); this.$toast.error("Lấy danh sách nhân viên thất bại"); });
+        this.pageChangeHandler(1, '', '', '');
     },
     methods: {
         pageChangeHandler(selectedPage, searchTerm, positionId, departmentId) {
-            this.currentPage = selectedPage;
-            this.emplStartCount = (selectedPage - 1) * 10;
             searchTerm = searchTerm ? searchTerm : this.$refs.search.value;
             positionId = positionId ? positionId : (this.$el.querySelector('#positionFilter .active') ? this.$el.querySelector('#positionFilter .active').dataset.id : '');
-            departmentId = departmentId ? departmentId : (this.$el.querySelector('#departmentFilter .active') ? this.$el.querySelector('#departmentFilter .active').dataset.id : '')
+            departmentId = departmentId ? departmentId : (this.$el.querySelector('#departmentFilter .active') ? this.$el.querySelector('#departmentFilter .active').dataset.id : '');
             var self = this;
-            axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&input=${searchTerm}&positionId=${positionId}&departmentId=${departmentId}`).then((res) => { self.employees = res.data; }).catch(() => {});
+            axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&input=${searchTerm}&positionId=${positionId}&departmentId=${departmentId}`)
+                .then((res) => { 
+                    self.pageAt = selectedPage;
+                    self.employees = res.data.employees;
+                    self.totalPage = res.data.totalPage;
+                    self.totalCount = res.data.totalCount;
+                    self.currStart = res.data.currStart;
+                    self.currEnd = res.data.currEnd;
+                    self.currCount = res.data.currCount;
+                }).catch(() => {});
         },
 
         /**
@@ -180,24 +191,13 @@ export default {
                 console.log("emplList line 178, data: emplCode: ", this.employeeCode);
             }
         },
-
-        /**
-         * Hàm reload ( gán lại dữ liệu danh sách nhân viên )
-         * Nếu tham số bao gồm truy vấn thì lấy api filter
-         * Author: NPLONG (06/08/2021)
-         */
-        btnReloadOnClick() {
-            console.log("Reloading..");
-            this.pageChangeHandler(1, '', '', '');
-            console.log("Reloaded!");
-        },
         
         /**
          * Thuc hien show form sua nhan vien khi kich dup chuot vao 1 dong trong bang
          * Author: NPLONG (30/07/2021)
          */
         rowOnDblClick(emplId) {
-            console.log("line 200 emplList: this.employeeId: ", this.employeeId, "this.newemployeeId:", this.newEmployeeId);
+            console.log("line 189 emplList: this.employeeId: ", this.employeeId, "this.newemployeeId:", this.newEmployeeId);
             this.formMode = 1;
             this.employeeId = emplId + "!";
             this.isHide = false;
@@ -212,8 +212,6 @@ export default {
             // TODO: Cach them bot class cho parent va child chuan VueJS
             // (e.target.parentNode.parentNode.parentNode).className += "checked";
 
-            // debugger; // eslint-disable-line no-debugger
-            console.log(event.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('thead .visible-icon'))
             let thisTr = event.currentTarget.parentNode.parentNode.parentNode;
 
             let checked = false;
@@ -230,7 +228,6 @@ export default {
             if (checked) {
                 this.selectedEmpls.push(emp);
                 thisTr.classList.add("checked");
-
                 event.currentTarget.parentNode.querySelector(".visible-icon").classList.remove("hidden");
                 
                 console.log(this.selectedEmpls);
@@ -241,7 +238,6 @@ export default {
 
                 event.currentTarget.parentNode.querySelector(".visible-icon").classList.add("hidden");
                 event.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('thead .visible-icon').classList.add("hidden");
-                
                 console.log(this.selectedEmpls);
             }
         },
@@ -270,6 +266,7 @@ export default {
                 this.employees.forEach(employee => {
                     this.selectedEmpls.add(employee);
                 });
+                this.selectedEmpls = [...this.selectedEmpls];
                 console.log(this.selectedEmpls);
 
                 let allTrs = this.$el.querySelectorAll('tbody tr');
@@ -309,24 +306,32 @@ export default {
             console.log(isHidden, del);
             this.isHidden = isHidden;
             if (del) {
-                this.selectedEmpls = [...this.selectedEmpls];
                 console.log(this.selectedEmpls);
                 for (let i = 0; i < this.selectedEmpls.length; i++) {
                     axios.delete(`https://localhost:5001/api/v1/Employees/${ this.selectedEmpls[i].EmployeeId }`)
-                        .then(() => {})
+                        .then(() => { this.pageChangeHandler(1, '', '', ''); })
                         .catch((err) => {
                             console.log(err);
                             this.$toast.error(`Xóa nhân viên ${ this.selectedEmpls[i].EmployeeCode } thất bại`);
                         });
                 }
                 this.$toast.success("Xóa các nhân viên thành công");
-                this.$nextTick(() => {
-                    this.btnReloadOnClick();
-                });
             }
+            this.pageChangeHandler(1, '', '', '');
         },
 
-        
+        assignFilterDrd(drdId, propId) {
+            switch (drdId) {
+				case "positionFilter":
+                    this.pageChangeHandler(1, '', propId, '');
+                    break;
+                case "departmentFilter":
+                    this.pageChangeHandler(1, '', '', propId);
+                    break;
+				default:
+					break;
+			}
+        }
     },
     watch: {
         searchInput: function() {

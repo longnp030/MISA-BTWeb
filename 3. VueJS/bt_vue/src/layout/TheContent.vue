@@ -1,27 +1,12 @@
 <template>
     <div id="content">
-        <EmployeeList/>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
-import EmployeeList from '../employee/EmployeeList.vue'
-
 export default {
     name: "BaseContent",
-    data() {
-        return {
-            visible: false,
-        }
-    },
-    components: {
-        EmployeeList,
-    },
-    methods: {
-        btnCancelOnClick() {
-            this.$emit('btnAddOnCLick', true);
-        }
-    },
 }
 </script>
 

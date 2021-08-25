@@ -43,8 +43,9 @@
 								<BaseDropdown
 									dropdownId="gender"
 									dropdownHint="Giới tính"
+									:apiUrl="genApi"
 									:dropdownInputVal="employee.Gender"
-									:employee="employee"/>
+									@assign="assignPropIdToEmpl"/>
 							</div>
 							
 							<div class="form-group">
@@ -93,8 +94,9 @@
 								<BaseDropdown
 									dropdownId="position"
 									dropdownHint="Vị trí"
+									:apiUrl="posApi"
 									:dropdownInputVal="employee.PositionId"
-									:employee="employee"/>
+									@assign="assignPropIdToEmpl"/>
 							</div>
 	
 							<div>
@@ -102,8 +104,9 @@
 								<BaseDropdown
 									dropdownId="department"
 									dropdownHint="Phòng ban"
+									:apiUrl="depApi"
 									:dropdownInputVal="employee.DepartmentId"
-									:employee="employee"/>
+									@assign="assignPropIdToEmpl"/>
 							</div>
 						
 							<div class="form-group">
@@ -127,8 +130,9 @@
 								<BaseDropdown
 									dropdownId="workstatus"
 									dropdownHint="Tình trạng công việc"
+									:apiUrl="workApi"
 									:dropdownInputVal="employee.WorkStatus"
-									:employee="employee"/>
+									@assign="assignPropIdToEmpl"/>
 							</div>
 						</div>
 					</div>
@@ -189,6 +193,10 @@ export default {
 			employee: {},
 			salaryError: false,
 			initialEmployeeId: '',
+			posApi: "https://localhost:5001/api/v1/Positions/",
+            depApi: "https://localhost:5001/api/v1/Departments/",
+            genApi: "https://localhost:5001/api/v1/Genders/",
+            workApi: "https://localhost:5001/api/v1/WorkStatus/",
 		}
 	},
 	methods: {
@@ -198,7 +206,6 @@ export default {
 		 * Author: NPLONG (30/07/2021)
 		 */
 		btnCancelOnClick() {
-			console.log("cancel on click.");
 			this.employee = {};
 			this.$refs.employeeForm.reset();
 			this.$emit('btnAddOnClick', true, false);
@@ -210,41 +217,22 @@ export default {
 		 */
 		btnSaveOnClick() {
 			this.$refs.employeeForm.validate().then((success) => {
-				if (!success) {
-					return;
-				}
+				if (!success) { return; }
 
 				var self = this;
 				if (this.formMode == 0) {
 					this.employee.CreatedDate = new Date();
-					Object.keys(this.employee).forEach(key => {
-						console.log("key: ", key, " val: ", this.employee[key]);
-					});
-					axios.post(`https://localhost:5001/api/v1/Employees/`, this.employee)
-						.then(() => { self.$toast.success("Thêm thành công"); })
-						.catch((res) => {
-							self.$toast.error("Thêm thất bại");
-							console.log(res.message);
-						});
-					this.$emit("btnAddOnClick", true, false);
-					this.$emit("reload");
+					// axios.post(`https://localhost:5001/api/v1/Employees/`, this.employee)
+					// 	.then(() => { self.$toast.success("Thêm thành công"); this.$emit("reload", 1, '', '', ''); })
+					// 	.catch((res) => { self.$toast.error("Thêm thất bại"); console.log(res.message); });
 				} else {
 					this.employee.ModifiedDate = new Date();
-					Object.keys(this.employee).forEach(key => {
-						console.log("key: ", key, " val: ", this.employee[key]);
-					});
 					axios.put(`https://localhost:5001/api/v1/Employees/${this.initialEmployeeId}/`, this.employee)
-						.then((res) => {
-							self.$toast.success("Sửa thành công");
-							console.log(res);
-						})
-						.catch((res) => {
-							self.$toast.error("Sửa thất bại");
-							console.log(res);
-						});
-					this.$emit("btnAddOnClick", true, false);
-					this.$emit("reload");
+						.then(() => { self.$toast.success("Sửa thành công"); this.$emit("reload", 1, '', '', ''); })
+						.catch((res) => { self.$toast.error("Sửa thất bại"); console.log(res); });
 				}
+				this.$emit("btnAddOnClick", true, false);
+				
 			});
 		},
 
@@ -265,6 +253,54 @@ export default {
 			event.target.value = event.target.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 		},
 
+		assignPropIdToEmpl(drdId, propId) {
+			switch (drdId) {
+				case "gender":
+					axios.get(this.genApi).then((res) => {
+						res.data.forEach(gen => {
+							if (gen.Gender === parseInt(propId)) {
+								this.employee.Gender = gen.Gender;
+								this.employee.GenderName = gen.GenderName;
+								return;
+							}
+						});}).catch(() => {});
+					break;
+				case "position":
+					axios.get(this.posApi).then((res) => {
+						res.data.forEach(pos => {
+							if (pos.PositionId === propId) {
+								this.employee.PositionId = pos.PositionId;
+								this.employee.PositionCode = pos.PositionCode;
+								this.employee.PositionName = pos.PositionName;
+								return;
+							}
+						});}).catch(() => {});
+					break;
+				case "department":
+					axios.get(this.depApi).then((res) => {
+						res.data.forEach(dep => {
+							if (dep.DepartmentId === propId) {
+								this.employee.DepartmentId = dep.DepartmentId;
+								this.employee.DepartmentCode = dep.DepartmentCode;
+								this.employee.DepartmentName = dep.DepartmentName;
+								return;
+							}
+						});}).catch(() => {});
+					break;
+				case "workstatus":
+					axios.get(this.workApi).then((res) => {
+						res.data.forEach(ws => {
+							if (ws.WorkStatus === parseInt(propId)) {
+								this.employee.WorkStatus = ws.WorkStatus;
+								this.employee.WorkStatusName = ws.WorkStatusName;
+								return;
+							}
+						});}).catch(() => {});
+					break;
+				default:
+					break;
+			}
+		}
 	},
 	watch: {
 		/**
