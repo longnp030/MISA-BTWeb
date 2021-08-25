@@ -21,6 +21,7 @@ import {
 	faSave,
 	faTimes,
 	faExclamationTriangle,
+	faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
@@ -32,6 +33,7 @@ library.add(
 	faSave,
 	faTimes,
 	faExclamationTriangle,
+	faSpinner
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 

@@ -111,6 +111,7 @@
         <div class="right"><b>{{ currCount }}</b> nhân viên/trang</div>
     </div>
 
+    <BaseLoading :hide="hideSpin"/>
     <EmployeeForm :formMode="formMode" :newEmployeeId="newEmployeeId" :employeeId="employeeId" :isHidden="isHide" @btnAddOnClick="btnAddOnClick" @reload="pageChangeHandler"/>
 </div>
 </template>
@@ -123,6 +124,7 @@ import BaseButton from '../base/BaseButton.vue'
 import BaseDropdown from '../base/BaseDropdown.vue'
 import BaseModal from '../base/BaseModal.vue'
 import SlidingPagination from 'vue-sliding-pagination'
+import BaseLoading from '../base/BaseLoading.vue'
 
 export default {
     name: "EmployeeList",
@@ -131,13 +133,15 @@ export default {
         BaseButton,
         BaseDropdown,
         BaseModal,
-        SlidingPagination
+        SlidingPagination,
+        BaseLoading,
     },
     data() {
         return {
             employees: [],
             isHidden: true, // alert modal
             isHide: true, // form modal
+            hideSpin: false,
             employeeId: '',
             newEmployeeId: '',
             searchInput: '',
@@ -156,12 +160,13 @@ export default {
     },
     methods: {
         pageChangeHandler(selectedPage, searchTerm, positionId, departmentId) {
+            this.hideSpin = false;
             searchTerm = searchTerm ? searchTerm : this.$refs.search.value;
             positionId = positionId ? positionId : (this.$el.querySelector('#positionFilter .active') ? this.$el.querySelector('#positionFilter .active').dataset.id : '');
             departmentId = departmentId ? departmentId : (this.$el.querySelector('#departmentFilter .active') ? this.$el.querySelector('#departmentFilter .active').dataset.id : '');
             var self = this;
             axios.get(`https://localhost:5001/api/v1/Employees/Filter?pageAt=${selectedPage}&input=${searchTerm}&positionId=${positionId}&departmentId=${departmentId}`)
-                .then((res) => { 
+                .then((res) => {
                     self.pageAt = selectedPage;
                     self.employees = res.data.employees;
                     self.totalPage = res.data.totalPage;
@@ -169,6 +174,7 @@ export default {
                     self.currStart = res.data.currStart;
                     self.currEnd = res.data.currEnd;
                     self.currCount = res.data.currCount;
+                    this.hideSpin = true;
                 }).catch(() => {});
         },
 

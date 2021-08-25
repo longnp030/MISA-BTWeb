@@ -14,17 +14,22 @@
     cursor: pointer;
 }
 
-.menu .menu-item:active {
+.menu .menu-item.active {
     background-color: #019160;
-    color: #ffffff;
-    font-family: GoogleSans-Medium;
+    font-family: GoogleSans-Regular;
     font-size: 13px;
 }
 
-.menu .menu-item:hover {
-    background-color: #e5e5e5;
-    color: #000000;
+.menu .menu-item.active:hover {
+    background-color: #2fbe8e;
     font-family: GoogleSans-Regular;
+}
+
+.menu .menu-item.active .menu-item-text a,
+.menu .menu-item.active .menu-item-text a:active,
+.menu .menu-item.active .menu-item-text a:visited,
+.menu .menu-item.active .menu-item-text a:link {
+    color: #ffffff;
 }
 
 .menu .menu-item .menu-icon {
@@ -50,4 +55,11 @@
 
 .menu .menu-item .menu-icon-setting {
     background-image: url("../../assets/icon/setting.png");
+}
+
+.menu .menu-item .menu-item-text a,
+.menu .menu-item .menu-item-text a:active,
+.menu .menu-item .menu-item-text a:visited,
+.menu .menu-item .menu-item-text a:link {
+    text-decoration: none;
 }

@@ -15,9 +15,9 @@
             <div class="menu-item-text">Mua hàng</div>
         </div>
 
-        <div class="menu-item">
+        <div class="menu-item" @click="active">
             <div class="menu-icon menu-icon-employee"></div>
-            <div class="menu-item-text"><router-link to="/employee">Danh mục nhân viên</router-link></div>
+            <div class="menu-item-text"><router-link to="/employee" >Danh mục nhân viên</router-link></div>
         </div>
 
         <div class="menu-item">
@@ -30,6 +30,11 @@
 <script>
 export default {
     name: "Menu",
+    methods: {
+        active() {
+            event.currentTarget.classList.add("active");
+        }
+    },
 }
 </script>
 
